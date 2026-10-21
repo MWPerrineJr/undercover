@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS claims (
     id TEXT PRIMARY KEY, body TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'waiting'
         CHECK(status IN ('waiting','in_progress','waiting_for_sign_off','decided')),
-    thread_id TEXT, decision TEXT, sign_off TEXT, payment TEXT,
+    thread_id TEXT, running INTEGER NOT NULL DEFAULT 0,
+    decision TEXT, sign_off TEXT, payment TEXT,
     CHECK(payment IS NULL OR decision IS NOT NULL),
     CHECK(sign_off IS NULL OR decision IS NOT NULL)
 );
@@ -48,6 +49,11 @@ def initialize():
     """Insert missing seed records without replacing saved work."""
     with connect() as db:
         db.executescript(SCHEMA)
+        columns = {row["name"] for row in db.execute("PRAGMA table_info(claims)")}
+        if "running" not in columns:
+            db.execute(
+                "ALTER TABLE claims ADD COLUMN running INTEGER NOT NULL DEFAULT 0"
+            )
         for kind, model in (
             ("customers", Customer),
             ("policies", Policy),
@@ -102,7 +108,13 @@ def claim_record(db, claim_id: str) -> dict:
     if row is None:
         raise LookupError("Claim not found")
     result = json.loads(row["body"])
-    result.update({"status": row["status"], "thread_id": row["thread_id"]})
+    result.update(
+        {
+            "status": row["status"],
+            "thread_id": row["thread_id"],
+            "running": bool(row["running"]),
+        }
+    )
     for field in ("decision", "sign_off", "payment"):
         result[field] = json.loads(row[field]) if row[field] else None
     return result

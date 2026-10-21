@@ -6,6 +6,8 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from backend.routes import router
+from backend.runs import recover
+from backend.runs import router as run_router
 from backend.store import initialize
 from backend.workflow import ConflictError
 
@@ -14,6 +16,7 @@ from backend.workflow import ConflictError
 async def lifespan(_app: FastAPI):
     """Initialize the local business records at startup."""
     initialize()
+    recover()
     yield
 
 
@@ -39,3 +42,4 @@ async def conflict(_request: Request, exception: ConflictError):
 
 
 app.include_router(router)
+app.include_router(run_router)

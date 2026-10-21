@@ -6,7 +6,7 @@ from fastapi import APIRouter
 
 from backend import store, workflow
 from backend.instructions import INSTRUCTIONS
-from backend.models import Decision, Payment, SignOff
+from backend.models import Activity, Decision, Payment, SignOff
 
 router = APIRouter(prefix="/api")
 
@@ -118,3 +118,14 @@ def sign_off(claim_id: str, request: SignOff) -> dict:
 def pay_claim(claim_id: str, request: Payment) -> dict:
     """Record a simulated payment after checking the approval boundary."""
     return workflow.pay(claim_id, request)
+
+
+@router.post("/claims/{claim_id}/activity", operation_id="record_activity")
+def record_activity(claim_id: str, request: Activity) -> dict:
+    """Record a concise operational event for the active run."""
+    with store.connect() as db:
+        claim = workflow.current(db, claim_id, request.thread_id)
+        if not claim["running"]:
+            raise workflow.ConflictError("This run has finished")
+        store.event(db, claim_id, request.thread_id, request.message)
+    return {"recorded": True}

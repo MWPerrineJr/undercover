@@ -34,7 +34,7 @@ def start(claim_id: str) -> dict:
             raise ConflictError("Only waiting claims can be started")
         thread_id = str(uuid4())
         db.execute(
-            "UPDATE claims SET status='in_progress', thread_id=? WHERE id=?",
+            "UPDATE claims SET status='in_progress', running=1, thread_id=? WHERE id=?",
             (thread_id, claim_id),
         )
         store.event(db, claim_id, thread_id, "Agent started")

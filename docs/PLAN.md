@@ -75,14 +75,14 @@ Add `POST /api/claims/{claim_id}/run`, returning `202` with a thread ID. Backend
 
 Success criteria:
 
-- [ ] Stub-model tests exercise a complete tool sequence: instructions, claim, policy, customer history, plans/wording, decision and payment. They verify that the agent reaches business records only through the backend API.
-- [ ] Scripted approve, decline and refer runs persist their structured outcomes and policy citations. A normal approval pays once; an approval over $1,000 stops at waiting for sign-off.
-- [ ] A stub agent that attempts an over-limit payment before sign-off receives the backend rejection, with no payment written; enforcement does not depend on obeying the prompt.
-- [ ] `POST /api/claims/CLM-1001/run` returns `202` promptly with a thread ID. A controlled delayed stub exposes `in_progress` and intermediate ordered activity through GET requests before it finishes.
-- [ ] Concurrent duplicate start requests yield one accepted run and one `409`. Starting a decided or sign-off-pending claim is rejected without overwriting its decision.
-- [ ] Failure tests cover an unavailable backend/model, invalid tool output and interrupted work: visible failure activity is retained, retry is possible before decision recording, and saved decisions/payments are preserved afterward. Recovery instructions cover an in-process run interrupted by server restart without automatic model reruns.
-- [ ] Unit tests verify the default model and low reasoning effort, the `MODEL_NAME` override and instruction retrieval. All tests use stubs and make no OpenRouter requests.
-- [ ] `npm run check:python` passes with at least 80% coverage.
+- [x] Stub-model tests exercise a complete tool sequence: instructions, claim, policy, customer history, plans/wording, decision and payment. They verify that the agent reaches business records only through the backend API.
+- [x] Scripted approve, decline and refer runs persist their structured outcomes and policy citations. A normal approval pays once; an approval over $1,000 stops at waiting for sign-off.
+- [x] A stub agent that attempts an over-limit payment before sign-off receives the backend rejection, with no payment written; enforcement does not depend on obeying the prompt.
+- [x] `POST /api/claims/CLM-1001/run` returns `202` promptly with a thread ID. A controlled delayed stub exposes `in_progress` and intermediate ordered activity through GET requests before it finishes.
+- [x] Concurrent duplicate start requests yield one accepted run and one `409`. Starting a decided or sign-off-pending claim is rejected without overwriting its decision.
+- [x] Failure tests cover an unavailable backend/model, invalid tool output and interrupted work: visible failure activity is retained, retry is possible before decision recording, and saved decisions/payments are preserved afterward. Recovery instructions cover an in-process run interrupted by server restart without automatic model reruns.
+- [x] Unit tests verify the default model and low reasoning effort, the `MODEL_NAME` override and instruction retrieval. All tests use stubs and make no OpenRouter requests.
+- [x] `npm run check:python` passes with at least 80% coverage.
 
 ## Phase 4: Handler dashboard
 
