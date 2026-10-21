@@ -1,8 +1,20 @@
 """The UnderCover backend."""
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
-app = FastAPI(title="UnderCover")
+from backend.store import initialize
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    """Initialize the local business records at startup."""
+    initialize()
+    yield
+
+
+app = FastAPI(title="UnderCover", lifespan=lifespan)
 
 
 @app.get("/api/health", operation_id="health")
