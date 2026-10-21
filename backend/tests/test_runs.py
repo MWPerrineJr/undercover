@@ -3,9 +3,11 @@ from decimal import Decimal
 from threading import Event
 
 import pytest
+from fastapi.testclient import TestClient
 
 from backend import runs, store, workflow
-from backend.models import Decision
+from backend.main import app
+from backend.models import Decision, Payment, SignOff
 
 
 def test_background_activity_and_duplicates(client, monkeypatch):
@@ -115,3 +117,27 @@ def test_success_completion(client, monkeypatch):
         == "Run finished"
     )
     assert client.post("/api/claims/CLM-1001/run").status_code == 409
+
+
+def test_restart_preserves_sign_off_payment_and_activity(client):
+    thread = workflow.start("CLM-1001")["thread_id"]
+    workflow.decide(
+        "CLM-1001",
+        Decision(
+            thread_id=thread,
+            outcome="approve",
+            payout=Decimal("1250"),
+            calculation="1250",
+            explanation="Covered. See section 3.",
+            policy_sections=[3],
+        ),
+    )
+    runs.recover()
+    assert client.get("/api/claims/CLM-1001").json()["status"] == "waiting_for_sign_off"
+    workflow.sign_off("CLM-1001", SignOff(thread_id=thread, handler_id="HND-01"))
+    workflow.pay("CLM-1001", Payment(thread_id=thread, amount=Decimal("1250")))
+    before = client.get("/api/claims/CLM-1001").json()
+    events = client.get("/api/claims/CLM-1001/activity").json()
+    with TestClient(app) as restarted:
+        assert restarted.get("/api/claims/CLM-1001").json() == before
+        assert restarted.get("/api/claims/CLM-1001/activity").json() == events

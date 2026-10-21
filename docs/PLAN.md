@@ -107,13 +107,13 @@ Prove the complete system works through the browser, including the payment bound
 
 Success criteria:
 
-- [ ] Playwright tests load all 25 queue claims, open a complete claim, read policy/history/documents, and confirm the displayed instructions match the backend's instruction text.
-- [ ] An approval at or below $1,000 moves from waiting through visible in-progress activity to decided and paid, with calculation and policy citation visible after refresh.
-- [ ] An approval above $1,000 reaches waiting for sign-off with no payment. A direct pre-sign-off API payment attempt fails, then a handler signs off in the UI and exactly one simulated payment completes the claim.
-- [ ] Separate decline and refer journeys finish as decided with reasons/citations and no payment. A failed run displays an error and can be retried without duplicate decisions or payments.
-- [ ] Refreshing or restarting the backend preserves decisions, activity, sign-offs and payments; tests or a documented restart check verify this against the same temporary database.
-- [ ] E2E setup resets only its isolated database and does not modify development data, read evaluation files or call a real model. The suite is repeatable without a key, including when a development server is already running.
-- [ ] `npm run e2e` passes, followed by `npm run check` passing all Python, TypeScript and Playwright checks without lowering thresholds or disabling rules.
+- [x] Playwright tests load all 25 queue claims, open a complete claim, read policy/history/documents, and confirm the displayed instructions match the backend's instruction text.
+- [x] An approval at or below $1,000 moves from waiting through visible in-progress activity to decided and paid, with calculation and policy citation visible after refresh.
+- [x] An approval above $1,000 reaches waiting for sign-off with no payment. A direct pre-sign-off API payment attempt fails, then a handler signs off in the UI and exactly one simulated payment completes the claim.
+- [x] Separate decline and refer journeys finish as decided with reasons/citations and no payment. A failed run displays an error and can be retried without duplicate decisions or payments.
+- [x] Refreshing or restarting the backend preserves decisions, activity, sign-offs and payments; tests or a documented restart check verify this against the same temporary database.
+- [x] E2E setup resets only its isolated database and does not modify development data, read evaluation files or call a real model. The suite is repeatable without a key, including when a development server is already running.
+- [x] `npm run e2e` passes, followed by `npm run check` passing all Python, TypeScript and Playwright checks without lowering thresholds or disabling rules.
 
 ## Phase 6: Operational handover
 
