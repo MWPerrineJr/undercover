@@ -433,3 +433,90 @@ footer {
     gap: 4px;
   }
 }
+
+.workspace-tabs {
+  display: flex;
+  gap: 8px;
+  max-width: 1480px;
+  margin: 0 auto 20px;
+  padding: 0 32px;
+}
+.workspace-tabs button {
+  background: var(--panel);
+  color: inherit;
+}
+.workspace-tabs [aria-selected="true"] {
+  background: #073b4c;
+  color: #fff;
+}
+.queue-runner {
+  padding: 0 8px 16px;
+}
+.queue-runner > button {
+  width: 100%;
+}
+.queue-runner > p {
+  margin: 10px 0 0;
+  font-size: 11px;
+}
+.queue-progress {
+  padding: 12px;
+  background: var(--soft);
+  border-radius: 10px;
+  margin-top: 12px;
+}
+.queue-progress p {
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+progress {
+  width: 100%;
+  accent-color: #06d6a0;
+}
+.queue-result {
+  text-transform: capitalize;
+  color: var(--muted);
+}
+.reset-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+.reset-panel {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.reset-panel input {
+  display: block;
+  width: 100%;
+  background: var(--soft);
+  color: inherit;
+  border: 1px solid var(--muted);
+  border-radius: 8px;
+  font: inherit;
+  padding: 12px;
+  margin: 10px 0 20px;
+}
+.reset-panel .danger {
+  background: #ef476f;
+  color: white;
+  margin-bottom: 16px;
+}
+@media (max-width: 800px) {
+  .workspace-tabs {
+    padding: 0 16px;
+    gap: 6px;
+  }
+  .workspace-tabs button {
+    font-size: 13px;
+    padding: 11px;
+  }
+}
+
+@media (min-width: 801px) {
+  .queue nav {
+    max-height: max(180px, calc(100vh - 480px));
+  }
+}
+.queue-result {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+}

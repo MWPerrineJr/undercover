@@ -8,137 +8,8 @@ import {
 } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import { App } from "./App";
-import type { Claim, Summary } from "./types";
 
-const original: Claim = {
-  claim_id: "CLM-1001",
-  customer_id: "CUS-1",
-  policy_id: "POL-1",
-  claim_type: "trip_delay",
-  summary: "Flight canceled",
-  submitted_on: "2026-06-24",
-  incident_date: "2026-06-18",
-  incident_location: "Rome",
-  story: "My flight was canceled. I stayed at an airport hotel.",
-  amount_claimed: "420",
-  items: [
-    { description: "Airport hotel", category: "accommodation", amount: 420 },
-  ],
-  documents: [
-    { name: "Hotel receipt", type: "receipt", content: "Hotel paid: $420.00." },
-  ],
-  status: "waiting",
-  running: false,
-  thread_id: null,
-  decision: null,
-  sign_off: null,
-  payment: null,
-};
-
-function mockBackend(initial: Partial<Claim> = {}) {
-  const claim: Claim = { ...original, ...initial };
-  let failPayment = false;
-  const request = async (input: string, init?: RequestInit) => {
-    await Promise.resolve();
-    const path = input.replace("/api", "");
-    if (init?.method === "POST") {
-      if (path.endsWith("/run")) {
-        claim.running = true;
-        claim.status = "in_progress";
-        claim.thread_id = "thread-1";
-      }
-      if (path.endsWith("/sign-off")) claim.sign_off = { handler_id: "HND-01" };
-      if (path.endsWith("/payment")) {
-        if (failPayment) {
-          failPayment = false;
-          return new Response("{}", { status: 503 });
-        }
-        claim.payment = { amount: claim.decision?.payout ?? "0" };
-        claim.status = "decided";
-      }
-      return Response.json({ thread_id: "thread-1" });
-    }
-    const summary: Summary = { ...claim, customer_name: "Maya Patel" };
-    const routes: Record<string, unknown> = {
-      "/claims": [
-        summary,
-        { ...summary, claim_id: "CLM-1002", customer_name: "Tom Becker" },
-      ],
-      "/claims/CLM-1001": claim,
-      "/claims/CLM-1002": {
-        ...claim,
-        claim_id: "CLM-1002",
-        summary: "Lost baggage",
-      },
-      "/policies/POL-1": {
-        policy_id: "POL-1",
-        plan: "premium",
-        add_ons: [],
-        trip: { destination: "Rome" },
-        active: true,
-        note: null,
-      },
-      "/customers/CUS-1": {
-        name: "Maya Patel",
-        previous_claims: [{ summary: "Earlier delay", amount_paid: 100 }],
-        verified: false,
-      },
-      "/plans": {
-        plans: [{ plan: "premium", trip_delay_max: 800 }],
-        add_ons: [{ name: "Electronics Plus" }],
-        deductible_applies_to: ["baggage", "emergency_medical"],
-      },
-      "/policy-wording": {
-        version: "2026.1",
-        text: "Policy section 3: trip delay",
-      },
-      "/instructions": {
-        text: "Read the complete policy wording before deciding.",
-      },
-      "/handlers": [
-        {
-          handler_id: "HND-01",
-          name: "Dana Whitfield",
-          can_approve_over_limit: true,
-        },
-      ],
-      "/claims/CLM-1001/activity": claim.thread_id
-        ? [
-            {
-              id: 1,
-              thread_id: claim.thread_id,
-              message: "Agent started",
-              created_at: "2026-06-24T10:00:00Z",
-            },
-          ]
-        : [],
-      "/claims/CLM-1002/activity": [],
-    };
-    return Response.json(routes[path] ?? {});
-  };
-  const fetcher = vi.fn(request);
-  vi.stubGlobal("fetch", fetcher);
-  return {
-    claim,
-    fetcher,
-    dispatch: request,
-    failNextPayment: () => {
-      failPayment = true;
-    },
-  };
-}
-
-const approved: Partial<Claim> = {
-  status: "waiting_for_sign_off",
-  thread_id: "thread-1",
-  decision: {
-    outcome: "approve",
-    payout: "1250",
-    calculation: "Eligible $1,250.00",
-    explanation: "Covered loss. See section 5.",
-    policy_sections: [5, 10],
-  },
-};
+import { original, approved, mockBackend } from "../tests/backend";
 
 afterEach(() => {
   cleanup();
@@ -244,7 +115,18 @@ it("reports a run error and allows retry", async () => {
 });
 
 it("shows an empty queue", async () => {
-  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json([])));
+  vi.stubGlobal(
+    "fetch",
+    vi
+      .fn()
+      .mockImplementation((path: string) =>
+        Promise.resolve(
+          Response.json(
+            path === "/api/claims" ? [] : { running: false, total: 0 },
+          ),
+        ),
+      ),
+  );
   render(<App />);
   expect(await screen.findByText("No claims in the queue.")).toBeDefined();
 });

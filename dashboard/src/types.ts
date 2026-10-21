@@ -65,3 +65,14 @@ export interface Details {
   handlers: Handler[];
   activity: Activity[];
 }
+
+export interface QueueRun {
+  running: boolean;
+  total: number;
+  processed: number;
+  failed: number;
+  skipped: number;
+  current_claim_id: string | null;
+  message: string;
+}
+export type WorkspaceTab = "queue" | "finished" | "reset";

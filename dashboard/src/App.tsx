@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { api, useResource } from "./api";
 import { ClaimDetail } from "./ClaimDetail";
-import { label, money } from "./format";
-import type { Summary } from "./types";
+import { Queue } from "./Queue";
+import { ResetDashboard } from "./ResetDashboard";
+import { WorkspaceTabs } from "./WorkspaceTabs";
+import { useWorkspace } from "./workspace";
+import type { WorkspaceTab } from "./types";
 import "./style.css";
 
-const loadQueue = (signal: AbortSignal) => api<Summary[]>("/claims", signal);
 const loadInstructions = (signal: AbortSignal) =>
   api<{ text: string }>("/instructions", signal);
-
 function Instructions({ revision }: Readonly<{ revision: number }>) {
   const { data, error } = useResource(loadInstructions, revision);
   return (
@@ -21,77 +22,33 @@ function Instructions({ revision }: Readonly<{ revision: number }>) {
   );
 }
 
-interface QueueProps {
-  queue: Summary[] | null;
-  error: string;
-  selected: string;
-  refresh: () => void;
-  select: (id: string) => void;
-}
-function Queue({
-  queue,
-  error,
-  selected,
-  refresh,
-  select,
-}: Readonly<QueueProps>) {
-  return (
-    <aside className="queue panel">
-      <div className="section-heading">
-        <h2>Claims queue</h2>
-        <span className="queue-count">{queue?.length ?? "—"}</span>
-      </div>
-      <p className="muted">Your team's claims, in one place.</p>
-      {error && (
-        <p role="alert">
-          {error} <button onClick={refresh}>Retry</button>
-        </p>
-      )}
-      {!queue && !error && <p role="status">Loading queue…</p>}
-      {queue?.length === 0 && <p>No claims in the queue.</p>}
-      <nav aria-label="Claims">
-        {queue?.map((claim) => (
-          <button
-            key={claim.claim_id}
-            className={`queue-item ${selected === claim.claim_id ? "selected" : ""}`}
-            aria-current={selected === claim.claim_id ? "true" : undefined}
-            onClick={() => {
-              select(claim.claim_id);
-            }}
-          >
-            <span className="queue-item-top">
-              <span className="identifier">{claim.claim_id}</span>
-              <span className={`badge ${claim.status}`}>
-                {label(claim.status)}
-              </span>
-            </span>
-            <strong>{claim.customer_name}</strong>
-            <span>{label(claim.claim_type)}</span>
-            <span className="queue-amount">{money(claim.amount_claimed)}</span>
-          </button>
-        ))}
-      </nav>
-    </aside>
-  );
-}
-
 export function App() {
-  const [revision, setRevision] = useState(0);
   const [selection, setSelection] = useState<string | null>(null);
   const [instructions, setInstructions] = useState(false);
-  const { data: queue, error } = useResource(loadQueue, revision);
-  const refresh = useCallback(() => {
-    setRevision((value) => value + 1);
-  }, []);
-  const running = queue?.some((claim) => claim.running) ?? false;
-  useEffect(() => {
-    if (!running) return;
-    const timer = setInterval(refresh, 1000);
-    return () => {
-      clearInterval(timer);
-    };
-  }, [running, refresh]);
-  const selected = selection ?? queue?.[0]?.claim_id ?? "";
+  const [tab, setTab] = useState<WorkspaceTab>("queue");
+  const {
+    claims,
+    progress,
+    total,
+    finishedCount,
+    queueCount,
+    firstClaim,
+    loading,
+    error,
+    revision,
+    refresh,
+    running,
+  } = useWorkspace();
+  const selected = selection ?? firstClaim;
+  function changeTab(next: WorkspaceTab) {
+    setTab(next);
+    setInstructions(false);
+    setSelection(
+      claims?.find(
+        (claim) => (claim.status === "decided") === (next === "finished"),
+      )?.claim_id ?? "",
+    );
+  }
   let content = (
     <section className="panel">
       <h1>Claims workspace</h1>
@@ -104,6 +61,17 @@ export function App() {
         key={selected}
         id={selected}
         revision={revision}
+        refresh={() => {
+          setSelection(selected);
+          refresh();
+        }}
+      />
+    );
+  if (tab === "reset")
+    content = (
+      <ResetDashboard
+        running={running || loading}
+        total={total}
         refresh={refresh}
       />
     );
@@ -130,17 +98,32 @@ export function App() {
           {instructions ? "Claims workspace" : "Agent instructions"}
         </button>
       </header>
-      <div className="workspace-body">
-        <Queue
-          queue={queue}
-          error={error}
-          selected={selected}
-          refresh={refresh}
-          select={(id) => {
-            setSelection(id);
-            setInstructions(false);
-          }}
-        />
+      <WorkspaceTabs
+        tab={tab}
+        queueCount={queueCount}
+        finishedCount={finishedCount}
+        select={changeTab}
+      />
+      <div
+        className={`workspace-body ${tab === "reset" ? "reset-layout" : ""}`}
+        id={`${tab}-panel`}
+        role="tabpanel"
+        aria-labelledby={`${tab}-tab`}
+      >
+        {tab !== "reset" && (
+          <Queue
+            claims={claims}
+            progress={progress}
+            finished={tab === "finished"}
+            error={error}
+            selected={selected}
+            refresh={refresh}
+            select={(id) => {
+              setSelection(id);
+              setInstructions(false);
+            }}
+          />
+        )}
         <main>{content}</main>
       </div>
       <footer>Pilot workspace · All payments are simulated · USD</footer>

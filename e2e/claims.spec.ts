@@ -51,6 +51,7 @@ test("approves a normal claim with visible activity and one persisted payment", 
     page.getByRole("region", { name: "Agent activity" }),
   ).toContainText("Run finished");
   await page.reload();
+  await page.getByRole("tab", { name: /Finished/ }).click();
   await expect(decision.getByText(/Simulated payment recorded/)).toBeVisible();
   const result = (await (await request.get("/api/claims/CLM-1001")).json()) as {
     thread_id: string;

@@ -14,7 +14,7 @@ _If you're looking at this in VS Code or Cursor, right-click `README.md` in the 
 
 From the repo root, run `uv sync` and `npm install`. Add `OPENROUTER_API_KEY` to `.env` (see `.env.example`), then run `npm run dev` and open http://localhost:5173. Run `npm run check` for all checks.
 
-The pilot includes the claims queue, evidence, agent decisions and activity, and handler sign-off for simulated payouts over $1,000. Setup, recovery, database reset and verification details are in [docs/STATUS.md](docs/STATUS.md).
+The pilot includes the claims queue, evidence, agent decisions and activity, and handler sign-off for simulated payouts over $1,000. Use Run queue to process waiting claims, Finished to browse decisions, and Reset to start over with confirmation. Setup, recovery, database reset and verification details are in [docs/STATUS.md](docs/STATUS.md).
 
 ## Key links
 

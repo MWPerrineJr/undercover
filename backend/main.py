@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from backend import queue
 from backend.routes import router
 from backend.runs import recover
 from backend.runs import router as run_router
@@ -17,6 +18,7 @@ async def lifespan(_app: FastAPI):
     """Initialize the local business records at startup."""
     initialize()
     recover()
+    queue.recover()
     yield
 
 
@@ -43,3 +45,4 @@ async def conflict(_request: Request, exception: ConflictError):
 
 app.include_router(router)
 app.include_router(run_router)
+app.include_router(queue.router)

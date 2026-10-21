@@ -35,6 +35,7 @@ def execute(claim_id: str, thread_id: str):
             "Run failed: check backend and model configuration; retry unfinished work"
         )
     finish(claim_id, thread_id, message)
+    return message == "Run finished"
 
 
 def recover():

@@ -18,7 +18,7 @@ def scripted_run(claim_id: str, thread_id: str):
     """Use synthetic outcomes unrelated to the evaluation answer key."""
     time.sleep(0.4)
     ATTEMPTS[claim_id] = ATTEMPTS.get(claim_id, 0) + 1
-    if claim_id == "CLM-1005" and ATTEMPTS[claim_id] == 1:
+    if claim_id in {"CLM-1005", "CLM-1025"} and ATTEMPTS[claim_id] == 1:
         raise ConnectionError("Synthetic unavailable model")
     outcome, amount = {
         "CLM-1002": ("approve", "1250.00"),
