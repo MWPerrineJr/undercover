@@ -57,13 +57,13 @@ Every operation has a unique `operation_id`, one-line docstring and fully requir
 
 Success criteria:
 
-- [ ] API tests and direct requests show `GET /api/claims` returning 25 summaries and `GET /api/claims/CLM-1001` returning its full story, items and document text; linked policy, customer/history, plans and wording endpoints return the corresponding records.
-- [ ] Every OpenAPI operation has a unique explicit operation ID, a one-line route docstring and no optional path, query or body inputs; malformed decisions and missing records return `422` and `404` respectively.
-- [ ] Synthetic-fixture tests verify approve, decline and refer, required explanations/citations/calculations, zero payout for non-approvals, rejection of negative/non-finite/fractional-cent amounts, and rejection of decisions outside an active run.
-- [ ] A $1,000.00 approval can be paid without sign-off. A $1,000.01 approval remains waiting for sign-off, and a direct payment request is rejected with `409` before sign-off, leaving no payment record.
-- [ ] A valid handler sign-off permits the exact approved amount through the separate payment operation. Unknown or ineligible handlers, stale decision sign-offs, mismatched amounts, non-approved claims and repeated payments cannot create a payment.
-- [ ] Transaction tests show concurrent payment attempts cannot create two payments or bypass sign-off; repeated/stale decision writes cannot replace a completed decision or invalidate a payment.
-- [ ] `npm run check:python` passes with the payment boundary and transition tests included and coverage at least 80%.
+- [x] API tests and direct requests show `GET /api/claims` returning 25 summaries and `GET /api/claims/CLM-1001` returning its full story, items and document text; linked policy, customer/history, plans and wording endpoints return the corresponding records.
+- [x] Every OpenAPI operation has a unique explicit operation ID, a one-line route docstring and no optional path, query or body inputs; malformed decisions and missing records return `422` and `404` respectively.
+- [x] Synthetic-fixture tests verify approve, decline and refer, required explanations/citations/calculations, zero payout for non-approvals, rejection of negative/non-finite/fractional-cent amounts, and rejection of decisions outside an active run.
+- [x] A $1,000.00 approval can be paid without sign-off. A $1,000.01 approval remains waiting for sign-off, and a direct payment request is rejected with `409` before sign-off, leaving no payment record.
+- [x] A valid handler sign-off permits the exact approved amount through the separate payment operation. Unknown or ineligible handlers, stale decision sign-offs, mismatched amounts, non-approved claims and repeated payments cannot create a payment.
+- [x] Transaction tests show concurrent payment attempts cannot create two payments or bypass sign-off; repeated/stale decision writes cannot replace a completed decision or invalidate a payment.
+- [x] `npm run check:python` passes with the payment boundary and transition tests included and coverage at least 80%.
 
 ## Phase 3: The agent and visible runs
 
