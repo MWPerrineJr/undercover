@@ -121,12 +121,12 @@ Finish the instructions and verify the pilot from the documented commands. Keep 
 
 Success criteria:
 
-- [ ] From the repo root, `uv sync` and `npm install` succeed and install the pre-commit hook; `npm run dev` starts both services on macOS and uses scripts compatible with Windows, with no new shell-specific commands.
-- [ ] `docs/STATUS.md` describes what is built, startup URLs, `.env` variables, database location/initialization, safe local reset instructions, run/retry and interrupted-run recovery, handler sign-off, simulated payments and all check commands. Update the short README only where needed.
-- [ ] Browser checks using Playwright confirm the documented queue, claim, activity, instructions and sign-off workflows, including the visible distinction between an approved decision and an unpaid payout awaiting sign-off.
-- [ ] Final `npm run check` passes: ruff formatting/lint, pyright, pytest with at least 80% coverage, Prettier, ESLint, tsc, Vitest with at least 80% coverage, and Playwright. Record actual results in `docs/STATUS.md`.
-- [ ] No secrets, local databases, evaluation answers or unrelated student changes are included in commits. No resources have been created on AWS and nothing has been pushed.
+- [x] From the repo root, `uv sync` and `npm install` succeed and install the pre-commit hook; `npm run dev` starts both services on macOS and uses scripts compatible with Windows, with no new shell-specific commands.
+- [x] `docs/STATUS.md` describes what is built, startup URLs, `.env` variables, database location/initialization, safe local reset instructions, run/retry and interrupted-run recovery, handler sign-off, simulated payments and all check commands. Update the short README only where needed.
+- [x] Browser checks using Playwright confirm the documented queue, claim, activity, instructions and sign-off workflows, including the visible distinction between an approved decision and an unpaid payout awaiting sign-off.
+- [x] Final `npm run check` passes: ruff formatting/lint, pyright, pytest with at least 80% coverage, Prettier, ESLint, tsc, Vitest with at least 80% coverage, and Playwright. Record actual results in `docs/STATUS.md`.
+- [x] No secrets, local databases, evaluation answers or unrelated student changes are included in commits. No resources have been created on AWS and nothing has been pushed.
 
 ## Implementation process
 
-This is a plan only; implementation starts when requested. Implement all six phases in order. For each phase, add tests, verify and tick every success criterion, update `docs/STATUS.md`, and commit the phase with the pre-commit hook enabled. Fix failures before continuing; never skip hooks, lower thresholds or disable rules. If a required rule appears wrong, stop and ask as `docs/PROCESS.md` requires. Run the complete check suite before handing over the finished pilot.
+Implementation was requested and all six phases are complete. The following process applies to this build: implement all six phases in order. For each phase, add tests, verify and tick every success criterion, update `docs/STATUS.md`, and commit the phase with the pre-commit hook enabled. Fix failures before continuing; never skip hooks, lower thresholds or disable rules. If a required rule appears wrong, stop and ask as `docs/PROCESS.md` requires. Run the complete check suite before handing over the finished pilot.

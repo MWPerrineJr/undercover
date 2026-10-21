@@ -10,6 +10,12 @@ This is the repo that accompanies the course. UnderCover is a fictional travel i
 
 _If you're looking at this in VS Code or Cursor, right-click `README.md` in the Explorer on the left and choose **Open Preview** to see it formatted._
 
+## Run the pilot
+
+From the repo root, run `uv sync` and `npm install`. Add `OPENROUTER_API_KEY` to `.env` (see `.env.example`), then run `npm run dev` and open http://localhost:5173. Run `npm run check` for all checks.
+
+The pilot includes the claims queue, evidence, agent decisions and activity, and handler sign-off for simulated payouts over $1,000. Setup, recovery, database reset and verification details are in [docs/STATUS.md](docs/STATUS.md).
+
 ## Key links
 
 - My curriculum of courses on Udemy: [edwarddonner.com/curriculum](https://edwarddonner.com/curriculum)
