@@ -94,12 +94,12 @@ Use the brand fonts, rounded panels, light and dark surfaces, specified colors a
 
 Success criteria:
 
-- [ ] Vitest/Testing Library tests cover queue loading, claim selection, complete evidence and decision display, instructions, empty/loading/error states, and stale-request handling when switching claims.
-- [ ] Component tests verify active-run polling, terminal-state polling cleanup, disabled duplicate-run controls, over-limit sign-off controls and payment retry after a saved sign-off.
-- [ ] A handler can choose one of the three seeded handlers, sign off an approved over-limit payout and see the simulated payment and decided status. Declined and referred claims have no payment action.
-- [ ] Using the Playwright MCP server, inspect the queue, full claim, live activity, over-limit sign-off and instructions pages with the stubbed backend, at desktop and mobile widths and in both color modes; verify keyboard navigation and readable focus/status/error feedback.
-- [ ] Browser inspection confirms Instrument Sans, Instrument Serif where an accent is used, JetBrains Mono for numbers/IDs, brand surfaces/colors, and currency such as `$1,250.00`, without clipped documents or horizontal page overflow.
-- [ ] `npm run check:ts` passes with strict TypeScript, no `any`, and at least 80% Vitest coverage.
+- [x] Vitest/Testing Library tests cover queue loading, claim selection, complete evidence and decision display, instructions, empty/loading/error states, and stale-request handling when switching claims.
+- [x] Component tests verify active-run polling, terminal-state polling cleanup, disabled duplicate-run controls, over-limit sign-off controls and payment retry after a saved sign-off.
+- [x] A handler can choose one of the three seeded handlers, sign off an approved over-limit payout and see the simulated payment and decided status. Declined and referred claims have no payment action.
+- [x] Using Playwright browser automation (MCP when available, otherwise the installed Playwright browser), inspect the queue, full claim, live activity, over-limit sign-off and instructions pages with the stubbed backend, at desktop and mobile widths and in both color modes; verify keyboard navigation and readable focus/status/error feedback.
+- [x] Browser inspection confirms Instrument Sans, Instrument Serif where an accent is used, JetBrains Mono for numbers/IDs, brand surfaces/colors, and currency such as `$1,250.00`, without clipped documents or horizontal page overflow.
+- [x] `npm run check:ts` passes with strict TypeScript, no `any`, and at least 80% Vitest coverage.
 
 ## Phase 5: End-to-end workflows
 
@@ -123,7 +123,7 @@ Success criteria:
 
 - [ ] From the repo root, `uv sync` and `npm install` succeed and install the pre-commit hook; `npm run dev` starts both services on macOS and uses scripts compatible with Windows, with no new shell-specific commands.
 - [ ] `docs/STATUS.md` describes what is built, startup URLs, `.env` variables, database location/initialization, safe local reset instructions, run/retry and interrupted-run recovery, handler sign-off, simulated payments and all check commands. Update the short README only where needed.
-- [ ] Browser checks using Playwright MCP confirm the documented queue, claim, activity, instructions and sign-off workflows, including the visible distinction between an approved decision and an unpaid payout awaiting sign-off.
+- [ ] Browser checks using Playwright confirm the documented queue, claim, activity, instructions and sign-off workflows, including the visible distinction between an approved decision and an unpaid payout awaiting sign-off.
 - [ ] Final `npm run check` passes: ruff formatting/lint, pyright, pytest with at least 80% coverage, Prettier, ESLint, tsc, Vitest with at least 80% coverage, and Playwright. Record actual results in `docs/STATUS.md`.
 - [ ] No secrets, local databases, evaluation answers or unrelated student changes are included in commits. No resources have been created on AWS and nothing has been pushed.
 
