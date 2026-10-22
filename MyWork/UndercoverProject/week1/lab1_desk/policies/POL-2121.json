@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2121",
+  "customer_id": "CUS-3121",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-05-20",
+  "sold_through": "Skylark Airways checkout",
+  "trip": {
+    "destination": "Sydney and the Great Barrier Reef, Australia",
+    "departs_on": "2026-07-06",
+    "returns_on": "2026-07-20",
+    "trip_cost": 6900.0
+  },
+  "travelers": [
+    "Philip Sherman"
+  ],
+  "status": "active"
+}

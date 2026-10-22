@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2119",
+  "customer_id": "CUS-3119",
+  "plan": "economy",
+  "add_ons": [],
+  "purchased_on": "2026-07-08",
+  "sold_through": "TripNest checkout",
+  "trip": {
+    "destination": "Queenstown, New Zealand",
+    "departs_on": "2026-08-02",
+    "returns_on": "2026-08-15",
+    "trip_cost": 4100.0
+  },
+  "travelers": [
+    "Jake Morrison"
+  ],
+  "status": "active"
+}

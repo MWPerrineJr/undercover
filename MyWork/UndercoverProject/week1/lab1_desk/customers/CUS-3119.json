@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3119",
+  "name": "Jake Morrison",
+  "email": "jake.morrison@example.com",
+  "phone": "+1 720 555 0148",
+  "date_of_birth": "1998-05-27",
+  "address": {
+    "street": "1275 Pine Street",
+    "city": "Boulder",
+    "state": "CO",
+    "zip": "80302"
+  },
+  "customer_since": "2026-07-08",
+  "previous_claims": []
+}

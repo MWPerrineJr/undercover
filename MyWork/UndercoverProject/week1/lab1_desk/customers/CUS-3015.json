@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3015",
+  "name": "Kate Callister",
+  "email": "kate.callister@example.com",
+  "phone": "+1 847 555 0125",
+  "date_of_birth": "1981-12-25",
+  "address": {
+    "street": "671 Lincoln Avenue",
+    "city": "Winnetka",
+    "state": "IL",
+    "zip": "60093"
+  },
+  "customer_since": "2026-04-02",
+  "previous_claims": []
+}

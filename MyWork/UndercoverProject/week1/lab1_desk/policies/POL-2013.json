@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2013",
+  "customer_id": "CUS-3013",
+  "plan": "economy",
+  "add_ons": [],
+  "purchased_on": "2026-07-01",
+  "sold_through": "Northwind Airlines checkout",
+  "trip": {
+    "destination": "Cancun, Mexico",
+    "departs_on": "2026-07-24",
+    "returns_on": "2026-07-31",
+    "trip_cost": 1850.0
+  },
+  "travelers": [
+    "Brian O'Connell"
+  ],
+  "status": "active"
+}

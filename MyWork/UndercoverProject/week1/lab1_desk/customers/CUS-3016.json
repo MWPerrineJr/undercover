@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3016",
+  "name": "Robert Haines",
+  "email": "robert.haines@example.com",
+  "phone": "+1 813 555 0173",
+  "date_of_birth": "1965-02-03",
+  "address": {
+    "street": "2908 West Bay Court",
+    "city": "Tampa",
+    "state": "FL",
+    "zip": "33611"
+  },
+  "customer_since": "2026-06-20",
+  "previous_claims": []
+}

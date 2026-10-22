@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2110",
+  "customer_id": "CUS-3110",
+  "plan": "first",
+  "add_ons": [],
+  "purchased_on": "2026-07-02",
+  "sold_through": "Meridian Air checkout",
+  "trip": {
+    "destination": "Paris, France",
+    "departs_on": "2026-08-23",
+    "returns_on": "2026-08-31",
+    "trip_cost": 5400.0
+  },
+  "travelers": [
+    "Amara Osei"
+  ],
+  "status": "active"
+}

@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3102",
+  "name": "Tyler Brooks",
+  "email": "tyler.brooks@example.com",
+  "phone": "+1 615 555 0169",
+  "date_of_birth": "1995-08-02",
+  "address": {
+    "street": "1308 Woodland Street",
+    "city": "Nashville",
+    "state": "TN",
+    "zip": "37206"
+  },
+  "customer_since": "2026-07-25",
+  "previous_claims": []
+}

@@ -1,0 +1,42 @@
+{
+  "claim_id": "CLM-1017",
+  "policy_id": "POL-2017",
+  "customer_id": "CUS-3017",
+  "claim_type": "baggage",
+  "submitted_on": "2026-07-23",
+  "incident_date": "2026-07-14",
+  "incident_location": "Naples, Italy",
+  "summary": "Backpack snatched by a scooter rider in Naples",
+  "story": "On the evening of July 14 I was walking back to my hostel in Naples with my backpack over one shoulder. A scooter came up behind me and the passenger pulled the backpack off my arm, and they were gone before I understood what had happened. I went to the Carabinieri station the next morning and made a report. It is in Italian and it is somewhere in my paperwork from the trip, so I will send it over when I find it. In the backpack were my tablet, a rain jacket and my sunglasses. I have attached the receipts I could find.",
+  "items": [
+    {
+      "description": "Backpack",
+      "category": "luggage",
+      "amount": 90.0
+    },
+    {
+      "description": "Tablet",
+      "category": "electronics",
+      "amount": 450.0
+    },
+    {
+      "description": "Rain jacket",
+      "category": "clothing",
+      "amount": 160.0
+    },
+    {
+      "description": "Sunglasses",
+      "category": "personal_item",
+      "amount": 130.0
+    }
+  ],
+  "amount_claimed": 830.0,
+  "documents": [
+    {
+      "name": "Purchase receipts",
+      "type": "receipt",
+      "content": "Cascade Electronics, Portland, November 2025, tablet 64 GB: $450.00. Trailhead Outfitters, Portland, April 2026, rain jacket: $160.00. Trailhead Outfitters, Portland, April 2026, daypack: $90.00."
+    }
+  ],
+  "status": "open"
+}

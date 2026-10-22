@@ -1,0 +1,25 @@
+{
+  "customer_id": "CUS-3116",
+  "name": "Marisol Vega",
+  "email": "marisol.vega@example.com",
+  "phone": "+1 520 555 0117",
+  "date_of_birth": "1989-12-14",
+  "address": {
+    "street": "2941 East Helen Street",
+    "city": "Tucson",
+    "state": "AZ",
+    "zip": "85716"
+  },
+  "customer_since": "2026-05-12",
+  "previous_claims": [
+    {
+      "claim_id": "CLM-0979",
+      "filed_on": "2026-06-18",
+      "incident_date": "2026-06-09",
+      "claim_type": "emergency_medical",
+      "summary": "Clinic visit in Cancun for an ear infection",
+      "outcome": "approved",
+      "amount_paid": 320.0
+    }
+  ]
+}

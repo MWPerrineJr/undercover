@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3113",
+  "name": "Grace Liu",
+  "email": "grace.liu@example.com",
+  "phone": "+1 720 555 0193",
+  "date_of_birth": "1986-09-28",
+  "address": {
+    "street": "2045 Larimer Street, Unit 410",
+    "city": "Denver",
+    "state": "CO",
+    "zip": "80205"
+  },
+  "customer_since": "2025-08-09",
+  "previous_claims": []
+}

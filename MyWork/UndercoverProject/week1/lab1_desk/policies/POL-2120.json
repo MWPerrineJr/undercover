@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2120",
+  "customer_id": "CUS-3120",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-07-01",
+  "sold_through": "Northwind Airlines checkout",
+  "trip": {
+    "destination": "Reykjavik, Iceland",
+    "departs_on": "2026-08-10",
+    "returns_on": "2026-08-19",
+    "trip_cost": 4100.0
+  },
+  "travelers": [
+    "Lorraine Baptiste"
+  ],
+  "status": "active"
+}

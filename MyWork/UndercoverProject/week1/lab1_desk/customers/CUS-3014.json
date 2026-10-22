@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3014",
+  "name": "Jordan Ellis-Wright",
+  "email": "jordan.elliswright@example.com",
+  "phone": "+1 816 555 0142",
+  "date_of_birth": "1994-06-30",
+  "address": {
+    "street": "4418 Holly Street",
+    "city": "Kansas City",
+    "state": "MO",
+    "zip": "64111"
+  },
+  "customer_since": "2026-05-12",
+  "previous_claims": []
+}

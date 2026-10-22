@@ -1,0 +1,25 @@
+{
+  "customer_id": "CUS-3111",
+  "name": "Leilani Kahale",
+  "email": "leilani.kahale@example.com",
+  "phone": "+1 808 555 0112",
+  "date_of_birth": "1993-02-11",
+  "address": {
+    "street": "3029 Kalakaua Avenue, Apt 8",
+    "city": "Honolulu",
+    "state": "HI",
+    "zip": "96815"
+  },
+  "customer_since": "2025-05-06",
+  "previous_claims": [
+    {
+      "claim_id": "CLM-0655",
+      "filed_on": "2025-06-27",
+      "incident_date": "2025-06-14",
+      "claim_type": "baggage",
+      "summary": "Suitcase damaged by the carrier on the way to Auckland",
+      "outcome": "approved",
+      "amount_paid": 310.0
+    }
+  ]
+}

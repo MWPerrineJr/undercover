@@ -1,0 +1,20 @@
+{
+  "policy_id": "POL-2115",
+  "customer_id": "CUS-3115",
+  "plan": "premium",
+  "add_ons": [
+    "pre_existing_waiver"
+  ],
+  "purchased_on": "2026-06-05",
+  "sold_through": "TripNest checkout",
+  "trip": {
+    "destination": "Vancouver, Canada",
+    "departs_on": "2026-08-10",
+    "returns_on": "2026-08-17",
+    "trip_cost": 2800.0
+  },
+  "travelers": [
+    "Harold Benson"
+  ],
+  "status": "active"
+}

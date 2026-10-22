@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3101",
+  "name": "Phil Fogg",
+  "email": "phil.fogg@example.com",
+  "phone": "+1 617 555 0180",
+  "date_of_birth": "1974-10-02",
+  "address": {
+    "street": "7 Savile Row Lane",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02108"
+  },
+  "customer_since": "2026-04-15",
+  "previous_claims": []
+}

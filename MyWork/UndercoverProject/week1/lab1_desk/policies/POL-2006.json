@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2006",
+  "customer_id": "CUS-3005",
+  "plan": "first",
+  "add_ons": [],
+  "purchased_on": "2026-07-21",
+  "sold_through": "TripNest checkout",
+  "trip": {
+    "destination": "Bentota, Sri Lanka",
+    "departs_on": "2026-08-08",
+    "returns_on": "2026-08-20",
+    "trip_cost": 5200.0
+  },
+  "travelers": [
+    "Oliver Grant"
+  ],
+  "status": "active"
+}

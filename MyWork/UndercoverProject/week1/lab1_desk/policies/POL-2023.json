@@ -1,0 +1,19 @@
+{
+  "policy_id": "POL-2023",
+  "customer_id": "CUS-3023",
+  "plan": "first",
+  "add_ons": [],
+  "purchased_on": "2026-05-11",
+  "sold_through": "Northwind Airlines checkout",
+  "trip": {
+    "destination": "Vancouver, Canada",
+    "departs_on": "2026-07-03",
+    "returns_on": "2026-07-10",
+    "trip_cost": 5600.0
+  },
+  "travelers": [
+    "Stephanie Marsh",
+    "Colin Marsh"
+  ],
+  "status": "active"
+}

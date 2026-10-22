@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3115",
+  "name": "Harold Benson",
+  "email": "harold.benson@example.com",
+  "phone": "+1 602 555 0131",
+  "date_of_birth": "1958-01-17",
+  "address": {
+    "street": "5120 North 12th Street",
+    "city": "Phoenix",
+    "state": "AZ",
+    "zip": "85014"
+  },
+  "customer_since": "2026-06-05",
+  "previous_claims": []
+}

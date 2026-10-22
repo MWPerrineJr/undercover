@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3108",
+  "name": "Marjorie Keane",
+  "email": "marjorie.keane@example.com",
+  "phone": "+1 206 555 0177",
+  "date_of_birth": "1959-09-21",
+  "address": {
+    "street": "5514 Latona Avenue NE",
+    "city": "Seattle",
+    "state": "WA",
+    "zip": "98105"
+  },
+  "customer_since": "2026-06-18",
+  "previous_claims": []
+}

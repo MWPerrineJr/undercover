@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2008",
+  "customer_id": "CUS-3008",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-04-17",
+  "sold_through": "Skylark Airways checkout",
+  "trip": {
+    "destination": "Seattle, Washington",
+    "departs_on": "2026-06-20",
+    "returns_on": "2026-06-27",
+    "trip_cost": 2800.0
+  },
+  "travelers": [
+    "Dorothy Gale"
+  ],
+  "status": "active"
+}

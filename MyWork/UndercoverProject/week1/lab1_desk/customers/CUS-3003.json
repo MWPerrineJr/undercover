@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3003",
+  "name": "Aiko Tanaka",
+  "email": "aiko.tanaka@example.com",
+  "phone": "+1 206 555 0121",
+  "date_of_birth": "1991-07-25",
+  "address": {
+    "street": "915 East Pine Street, Unit 302",
+    "city": "Seattle",
+    "state": "WA",
+    "zip": "98122"
+  },
+  "customer_since": "2026-05-04",
+  "previous_claims": []
+}

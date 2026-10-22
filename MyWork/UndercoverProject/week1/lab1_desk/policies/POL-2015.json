@@ -1,0 +1,23 @@
+{
+  "policy_id": "POL-2015",
+  "customer_id": "CUS-3015",
+  "plan": "first",
+  "add_ons": [],
+  "purchased_on": "2026-04-02",
+  "sold_through": "Meridian Air checkout",
+  "trip": {
+    "destination": "Paris, France",
+    "departs_on": "2026-06-20",
+    "returns_on": "2026-06-30",
+    "trip_cost": 9600.0
+  },
+  "travelers": [
+    "Kate Callister",
+    "Peter Callister",
+    "Megan Callister",
+    "Jeff Callister",
+    "Linnie Callister",
+    "Kevin Callister"
+  ],
+  "status": "active"
+}

@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3109",
+  "name": "Jonathan Harker",
+  "email": "jonathan.harker@example.com",
+  "phone": "+1 603 555 0187",
+  "date_of_birth": "1992-05-03",
+  "address": {
+    "street": "9 Front Street",
+    "city": "Exeter",
+    "state": "NH",
+    "zip": "03833"
+  },
+  "customer_since": "2026-04-30",
+  "previous_claims": []
+}

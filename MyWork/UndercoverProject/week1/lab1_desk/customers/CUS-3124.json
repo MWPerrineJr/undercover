@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3124",
+  "name": "Alfred Linguini",
+  "email": "alfred.linguini@example.com",
+  "phone": "+1 347 555 0175",
+  "date_of_birth": "1999-04-16",
+  "address": {
+    "street": "218 Court Street, Apt 5R",
+    "city": "Brooklyn",
+    "state": "NY",
+    "zip": "11201"
+  },
+  "customer_since": "2026-06-02",
+  "previous_claims": []
+}

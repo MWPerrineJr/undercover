@@ -1,0 +1,19 @@
+{
+  "policy_id": "POL-2104",
+  "customer_id": "CUS-3104",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-05-12",
+  "sold_through": "Polar Star Cruises checkout",
+  "trip": {
+    "destination": "Alaska Inside Passage cruise from Seattle",
+    "departs_on": "2026-08-01",
+    "returns_on": "2026-08-08",
+    "trip_cost": 4700.0
+  },
+  "travelers": [
+    "Walter Ferris",
+    "June Ferris"
+  ],
+  "status": "active"
+}

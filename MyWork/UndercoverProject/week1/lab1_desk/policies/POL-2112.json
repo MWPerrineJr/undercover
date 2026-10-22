@@ -1,0 +1,20 @@
+{
+  "policy_id": "POL-2112",
+  "customer_id": "CUS-3112",
+  "plan": "economy",
+  "add_ons": [
+    "electronics_plus"
+  ],
+  "purchased_on": "2026-06-15",
+  "sold_through": "TripNest checkout",
+  "trip": {
+    "destination": "Krabi, Thailand",
+    "departs_on": "2026-07-11",
+    "returns_on": "2026-07-25",
+    "trip_cost": 2100.0
+  },
+  "travelers": [
+    "Mia Castellano"
+  ],
+  "status": "active"
+}

@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3120",
+  "name": "Lorraine Baptiste",
+  "email": "lorraine.baptiste@example.com",
+  "phone": "+1 504 555 0173",
+  "date_of_birth": "1976-11-11",
+  "address": {
+    "street": "1231 Dauphine Street",
+    "city": "New Orleans",
+    "state": "LA",
+    "zip": "70116"
+  },
+  "customer_since": "2025-08-02",
+  "previous_claims": []
+}

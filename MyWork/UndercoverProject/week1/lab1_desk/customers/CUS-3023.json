@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3023",
+  "name": "Stephanie Marsh",
+  "email": "stephanie.marsh@example.com",
+  "phone": "+1 214 555 0114",
+  "date_of_birth": "1980-06-17",
+  "address": {
+    "street": "5523 Vickery Boulevard",
+    "city": "Dallas",
+    "state": "TX",
+    "zip": "75206"
+  },
+  "customer_since": "2025-08-08",
+  "previous_claims": []
+}

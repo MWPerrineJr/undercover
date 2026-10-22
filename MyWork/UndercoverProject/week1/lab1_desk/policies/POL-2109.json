@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2109",
+  "customer_id": "CUS-3109",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-04-30",
+  "sold_through": "Meridian Air checkout",
+  "trip": {
+    "destination": "Bistrita and the Borgo Pass, Romania",
+    "departs_on": "2026-06-03",
+    "returns_on": "2026-06-20",
+    "trip_cost": 3200.0
+  },
+  "travelers": [
+    "Jonathan Harker"
+  ],
+  "status": "active"
+}

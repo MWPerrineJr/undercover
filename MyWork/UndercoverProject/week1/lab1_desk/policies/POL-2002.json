@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2002",
+  "customer_id": "CUS-3002",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-05-11",
+  "sold_through": "Northwind Airlines checkout",
+  "trip": {
+    "destination": "Prague, Czech Republic",
+    "departs_on": "2026-06-20",
+    "returns_on": "2026-06-29",
+    "trip_cost": 2650.0
+  },
+  "travelers": [
+    "Tom Becker"
+  ],
+  "status": "active"
+}

@@ -1,0 +1,34 @@
+{
+  "customer_id": "CUS-3019",
+  "name": "Victor Salazar",
+  "email": "victor.salazar@example.com",
+  "phone": "+1 305 555 0114",
+  "date_of_birth": "1977-07-07",
+  "address": {
+    "street": "1550 Brickell Avenue, Apt 1204",
+    "city": "Miami",
+    "state": "FL",
+    "zip": "33129"
+  },
+  "customer_since": "2024-01-22",
+  "previous_claims": [
+    {
+      "claim_id": "CLM-0874",
+      "filed_on": "2025-10-03",
+      "incident_date": "2025-09-24",
+      "claim_type": "trip_delay",
+      "summary": "Eleven hour delay leaving Miami",
+      "outcome": "approved",
+      "amount_paid": 340.0
+    },
+    {
+      "claim_id": "CLM-0951",
+      "filed_on": "2026-03-18",
+      "incident_date": "2026-03-09",
+      "claim_type": "baggage_delay",
+      "summary": "Checked bag arrived 16 hours late in Madrid",
+      "outcome": "approved",
+      "amount_paid": 260.0
+    }
+  ]
+}

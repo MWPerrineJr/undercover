@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2017",
+  "customer_id": "CUS-3017",
+  "plan": "economy",
+  "add_ons": [],
+  "purchased_on": "2026-06-11",
+  "sold_through": "TripNest checkout",
+  "trip": {
+    "destination": "Naples and the Amalfi Coast, Italy",
+    "departs_on": "2026-07-11",
+    "returns_on": "2026-07-21",
+    "trip_cost": 2600.0
+  },
+  "travelers": [
+    "Emily Nguyen"
+  ],
+  "status": "active"
+}

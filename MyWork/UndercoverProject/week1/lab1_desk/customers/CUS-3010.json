@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3010",
+  "name": "Stuart Price",
+  "email": "stuart.price@example.com",
+  "phone": "+1 818 555 0161",
+  "date_of_birth": "1978-08-23",
+  "address": {
+    "street": "4480 Woodman Avenue",
+    "city": "Sherman Oaks",
+    "state": "CA",
+    "zip": "91423"
+  },
+  "customer_since": "2026-05-29",
+  "previous_claims": []
+}

@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2122",
+  "customer_id": "CUS-3122",
+  "plan": "economy",
+  "add_ons": [],
+  "purchased_on": "2026-07-19",
+  "sold_through": "Northwind Airlines checkout",
+  "trip": {
+    "destination": "Munich, Germany",
+    "departs_on": "2026-08-09",
+    "returns_on": "2026-08-17",
+    "trip_cost": 2300.0
+  },
+  "travelers": [
+    "Carla Jennings"
+  ],
+  "status": "active"
+}

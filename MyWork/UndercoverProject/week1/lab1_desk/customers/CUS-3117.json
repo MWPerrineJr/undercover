@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3117",
+  "name": "Trevor Mallory",
+  "email": "trevor.mallory@example.com",
+  "phone": "+1 515 555 0169",
+  "date_of_birth": "1986-02-08",
+  "address": {
+    "street": "1427 Ingersoll Avenue",
+    "city": "Des Moines",
+    "state": "IA",
+    "zip": "50309"
+  },
+  "customer_since": "2026-07-02",
+  "previous_claims": []
+}
