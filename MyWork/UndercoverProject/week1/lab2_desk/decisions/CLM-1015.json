@@ -1,11 +1,14 @@
 {
   "claim_id": "CLM-1015",
   "decision": "decline",
-  "payout": 0,
-  "calculation": "No payout. The reason for the interruption is not a covered reason under section 2, so no line items are eligible: $0.00.",
-  "section_relied_on": "Wording section 2, Trip Cancellation and Interruption",
-  "reason": "The customer cut her trip short because she realized on the flight that her eight-year-old son had been left at home. Section 2 lists the only reasons we pay for cancellation or interruption (sickness, injury or death; severe weather or natural disaster; uninhabitable home or destination; jury duty or subpoena; involuntary job loss), and none of them applies here. The section states, 'We do not pay for cancellation or interruption for any other reason.' The claim was filed within the 90-day window and the incident falls inside the covered trip, and the customer has no prior claims, so the only issue is that the reason is not covered.",
-  "decided_by": "claim-handler subagent",
-  "decided_at": "2026-07-06",
-  "letter": "Dear Mrs. Callister,\n\nThank you for your claim, and I'm glad Kevin was fine. I'm sorry to say we cannot pay this claim.\n\nUnder your policy, Trip Cancellation and Interruption (section 2) pays only when you cut a trip short for one of these reasons: sickness, injury or death of you, a traveling companion or a family member; severe weather or a natural disaster that stops your carrier; your home or destination being made uninhabitable; jury duty or a court subpoena; or losing your job through no fault of your own after at least a year. Leaving a child at home by mistake is not one of these reasons, and the section says: \"We do not pay for cancellation or interruption for any other reason.\"\n\nBecause the reason is not covered, there is no payment for the one-way fare home or the unused hotel nights. Your decision is: declined, $0.00.\n\nIf you think we have missed something, please get in touch and we will look again.\n\nWith kind regards,\nUnderCover Travel Insurance Claims"
+  "payout": 0.00,
+  "calculation": "No eligible amount. The claim is for trip interruption under section 2, which is not triggered by any covered reason: eligible transport $0.00 + eligible trip cost $0.00 = $0.00, so the payout is $0.00.",
+  "section_relied_on": "Policy wording section 2 (Trip Cancellation and Interruption), the list of covered reasons and the sentence 'We do not pay for cancellation or interruption for any other reason.'",
+  "reason": "The customer cut the trip short because the family left their eight-year-old son at home and she flew back to him. That is not one of the covered reasons for cancellation or interruption in section 2 (sickness, injury or death; severe weather or natural disaster; an uninhabitable home or destination; jury duty or a court subpoena; or losing a job). Section 2 pays for no other reason, so the one-way fare home and the unused prepaid hotel nights are not covered.",
+  "decided_by": "Automated claims system (claims handler review under manual section 2)",
+  "decided_on": "2026-07-03",
+  "signed_off_by": null,
+  "signed_off_on": null,
+  "manual_version": "2026.2",
+  "wording_version": "2026.1"
 }

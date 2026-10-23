@@ -1,21 +1,33 @@
 {
   "claim_id": "CLM-1021",
   "decision": "approve",
-  "payout": 825,
-  "calculation": [
-    "Headphones, $429 claimed: not an 'electronic' under the Electronics Plus list (wording s.8), so the Premium per-item limit of $300 applies -> $300",
-    "E-reader, $180 claimed: an 'electronic' under s.8, Electronics Plus limit $1,200, under the limit -> $180",
-    "Handheld game console, $399 claimed: not an 'electronic' under the s.8 list, so the Premium per-item limit of $300 applies -> $300",
-    "Canvas and leather tote bag, $95 claimed: item claimed at $100 or less, customer's own list is enough (manual s.5); under the $300 per-item limit -> $95",
-    "Subtotal eligible: $300 + $180 + $300 + $95 = $875",
-    "Less Premium deductible, once per claim: -$50",
-    "Result: $825",
-    "Cap at Baggage and Personal Effects maximum of $1,500: not reached",
-    "Payout: $825"
-  ],
-  "section_relied_on": "Wording section 5 (Baggage and Personal Effects) and section 8 (Electronics Plus add-on)",
-  "reason": "Theft from the person is covered under section 5 and is never treated as unattended belongings, the police report was made the same day (within 24 hours) and proof of value is on file for every item claimed above $100. The Electronics Plus add-on raises the per-item limit to $1,200 only for the items listed in section 8, which covers the e-reader but not the headphones or the handheld game console; those two fall back to the Premium per-item limit of $300. After the $300 caps, the $95 tote (customer's list is enough for items of $100 or less) and the single $50 deductible, the payout is $825.",
-  "decided_by": "claim-handler subagent",
-  "decided_at": "2026-07-15",
-  "letter": "Dear Ms. Fontaine,\n\nThank you for your claim, and I'm sorry this happened on your trip to Buenos Aires. We're approving your claim and paying $825.\n\nWe worked out your payment like this:\n\n- Noise-canceling headphones, claimed at $429: $300 (your Premium plan's per-item limit of $300 applies, as headphones are not one of the electronics covered by the Electronics Plus add-on)\n- E-reader, claimed at $180: $180 (covered in full under Electronics Plus)\n- Handheld game console, claimed at $399: $300 (the $300 per-item limit applies, as game consoles are not on the Electronics Plus list)\n- Canvas and leather tote bag, claimed at $95: $95\n- Subtotal: $875\n- Less your $50 deductible: $825\n\nThe $1,500 maximum for Baggage and Personal Effects was not reached. Your police report was made the same day, so the theft condition is met, and your receipts covered the items over $100.\n\nWe'll arrange payment to your account shortly. If you have any questions, just reply to this email.\n\nWarm regards,\nUnderCover Travel Insurance Claims"
+  "payout": 954.00,
+  "calculation": {
+    "benefit": "Baggage and Personal Effects (theft)",
+    "plan": "Premium",
+    "add_ons": ["electronics_plus"],
+    "per_item_limit_general": 300.00,
+    "per_item_limit_electronics": 1200.00,
+    "deductible": 50.00,
+    "maximum": 1500.00,
+    "lines": [
+      {"item": "Noise-canceling headphones", "claimed": 429.00, "eligible": 429.00, "note": "electronics, within Electronics Plus $1,200 per-item limit"},
+      {"item": "E-reader", "claimed": 180.00, "eligible": 180.00, "note": "electronics, within Electronics Plus $1,200 per-item limit"},
+      {"item": "Handheld game console", "claimed": 399.00, "eligible": 300.00, "note": "not an 'electronics' item under the Electronics Plus definition (phones, tablets, laptops, cameras and lenses, e-readers, smartwatches), so the Premium per-item limit of $300 applies"},
+      {"item": "Canvas and leather tote bag", "claimed": 95.00, "eligible": 95.00, "note": "items of $100 or less may be proven by the customer's own list; under the $300 per-item limit"}
+    ],
+    "subtotal_eligible": 1004.00,
+    "less_other_party_payments": 0.00,
+    "less_deductible": 50.00,
+    "capped_at_maximum": 954.00,
+    "payout": 954.00
+  },
+  "wording_section": "Section 5, Baggage and Personal Effects, and Section 8 add-on 'Electronics Plus'; deductible per Section 1.",
+  "reason": "The tote bag was snatched from the customer's shoulder in Buenos Aires, which is theft from the person and not an unattended-belongings case, and the theft was reported to the local police the same day, within the 24-hour requirement. The police report and the purchase receipts are on file, so the loss is covered. Each electronics item is paid at its claimed value under the Electronics Plus $1,200 per-item limit, but the handheld game console is not an 'electronics' item as defined for that add-on, so it is capped at the Premium per-item limit of $300; after the $50 Premium deductible the payout is $954.",
+  "decided_by": "automated claims system",
+  "decided_on": "2026-07-15",
+  "signed_off_by": null,
+  "signed_off_on": null,
+  "manual_version": "2026.2",
+  "wording_version": "2026.1"
 }
