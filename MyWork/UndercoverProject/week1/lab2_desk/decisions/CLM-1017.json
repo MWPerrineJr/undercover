@@ -1,0 +1,20 @@
+{
+  "claim_id": "CLM-1017",
+  "decision": "refer",
+  "payout": 0,
+  "calculation": [
+    "Indicative only, once documents are received:",
+    "Backpack: claimed $90.00, per-item limit $150 -> $90.00",
+    "Tablet: claimed $450.00, per-item limit $150 -> $150.00",
+    "Rain jacket: claimed $160.00, per-item limit $150 -> $150.00",
+    "Sunglasses: claimed $130.00, per-item limit $150 -> $130.00 (requires proof of value)",
+    "Subtotal eligible: $520.00",
+    "Less Economy deductible (once per claim): -$100.00",
+    "Indicative payout if both documents are supplied: $420.00 (below the $750 Economy benefit maximum, so no sign-off required)"
+  ],
+  "section_relied_on": "Policy Wording section 5 (Baggage and Personal Effects) - theft reporting condition; Claims Manual section 5 (Documents and document requests)",
+  "reason": "The theft is covered in principle: a snatch from the person in Naples on 14 July 2026 is inside the covered trip (11-21 July), the claim was filed within the 90-day window, and under the Manual's interpretation note a theft from the person is never treated as unattended belongings. However, two required documents are not on file: the police report for the theft (wording section 5 requires the theft to be reported to local police within 24 hours and a copy of the report to be sent), and proof of value for the sunglasses claimed at $130, which is above the $100 threshold. Manual section 5 says a missing document is a referral, not a decline, and that we must not approve on the customer's promise to send it later; because the customer states the police report was in fact made, this is a missing-document referral rather than a decline for a condition never met.",
+  "decided_by": "claim-handler subagent",
+  "decided_at": "2026-07-24",
+  "letter": "Thank you for your claim, and I am sorry this happened to you in Naples - having a bag pulled off your arm is frightening, and I am glad you were not hurt.\n\nWe are not able to pay your claim yet, but it is not refused. Your claim is being held open while we receive two documents we need for a theft claim.\n\n1. The police report. Please send us a copy of the report you made to the Carabinieri the morning after the theft (15 July 2026). A photograph or scan of the report, or a copy of the English translation, is fine. Our policy asks for the theft to be reported to the local police within 24 hours of the incident and for us to have a copy of that report.\n2. Proof of value for your sunglasses. The sunglasses are claimed at $130, which is more than $100, so we need a purchase receipt or a card statement showing what you paid for them. A receipt alone is enough - we do not need the original.\n\nYou can send both by replying to this email and attaching the documents, or by uploading them to the document link in your claims portal.\n\nWe will hold your claim open for 30 days from the date of this letter to give you time to send these in. As soon as they arrive we will finish assessing the claim.\n\nSo that you know where things stand: the amount you would be entitled to, if the documents come through, is about $420.00. That is made up of $90 for the backpack, $150 for the tablet, $150 for the rain jacket and $130 for the sunglasses (each item is capped at $150 on your Economy plan), less your $100 deductible.\n\nTake care, and please do get in touch if anything is unclear.\n\nUnderCover Travel Insurance Claims Team"
+}

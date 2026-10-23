@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3122",
+  "name": "Carla Jennings",
+  "email": "carla.jennings@example.com",
+  "phone": "+1 614 555 0161",
+  "date_of_birth": "1989-03-05",
+  "address": {
+    "street": "882 Neil Avenue",
+    "city": "Columbus",
+    "state": "OH",
+    "zip": "43215"
+  },
+  "customer_since": "2026-07-19",
+  "previous_claims": []
+}

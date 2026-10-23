@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2004",
+  "customer_id": "CUS-3004",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-05-26",
+  "sold_through": "Skylark Airways checkout",
+  "trip": {
+    "destination": "Edinburgh, United Kingdom",
+    "departs_on": "2026-07-01",
+    "returns_on": "2026-07-09",
+    "trip_cost": 3400.0
+  },
+  "travelers": [
+    "Danielle Okafor"
+  ],
+  "status": "active"
+}

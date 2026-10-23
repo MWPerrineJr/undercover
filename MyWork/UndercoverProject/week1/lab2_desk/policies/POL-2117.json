@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2117",
+  "customer_id": "CUS-3117",
+  "plan": "economy",
+  "add_ons": [],
+  "purchased_on": "2026-07-02",
+  "sold_through": "Skylark Airways checkout",
+  "trip": {
+    "destination": "Rio de Janeiro, Brazil",
+    "departs_on": "2026-08-08",
+    "returns_on": "2026-08-16",
+    "trip_cost": 2300.0
+  },
+  "travelers": [
+    "Trevor Mallory"
+  ],
+  "status": "active"
+}

@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3103",
+  "name": "Dennis Kaminski",
+  "email": "dennis.kaminski@example.com",
+  "phone": "+1 612 555 0158",
+  "date_of_birth": "1971-06-27",
+  "address": {
+    "street": "4410 Xerxes Avenue South",
+    "city": "Minneapolis",
+    "state": "MN",
+    "zip": "55410"
+  },
+  "customer_since": "2024-09-12",
+  "previous_claims": []
+}

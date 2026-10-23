@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2105",
+  "customer_id": "CUS-3105",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-03-28",
+  "sold_through": "Andes Trails checkout",
+  "trip": {
+    "destination": "Cusco and Machu Picchu, Peru",
+    "departs_on": "2026-08-03",
+    "returns_on": "2026-08-14",
+    "trip_cost": 2400.0
+  },
+  "travelers": [
+    "Daniel Cho"
+  ],
+  "status": "active"
+}

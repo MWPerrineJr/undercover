@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3112",
+  "name": "Mia Castellano",
+  "email": "mia.castellano@example.com",
+  "phone": "+1 401 555 0172",
+  "date_of_birth": "2001-10-08",
+  "address": {
+    "street": "88 Benefit Street, Apt 3",
+    "city": "Providence",
+    "state": "RI",
+    "zip": "02903"
+  },
+  "customer_since": "2026-06-15",
+  "previous_claims": []
+}

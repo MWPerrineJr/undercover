@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3123",
+  "name": "Douglas Pruitt",
+  "email": "douglas.pruitt@example.com",
+  "phone": "+1 918 555 0164",
+  "date_of_birth": "1958-08-15",
+  "address": {
+    "street": "3120 South Yorktown Avenue",
+    "city": "Tulsa",
+    "state": "OK",
+    "zip": "74105"
+  },
+  "customer_since": "2026-04-22",
+  "previous_claims": []
+}

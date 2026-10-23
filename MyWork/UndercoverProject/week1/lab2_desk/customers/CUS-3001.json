@@ -1,0 +1,25 @@
+{
+  "customer_id": "CUS-3001",
+  "name": "Maya Patel",
+  "email": "maya.patel@example.com",
+  "phone": "+1 201 555 0143",
+  "date_of_birth": "1988-03-14",
+  "address": {
+    "street": "48 Wayne Street, Apt 5C",
+    "city": "Jersey City",
+    "state": "NJ",
+    "zip": "07302"
+  },
+  "customer_since": "2023-04-11",
+  "previous_claims": [
+    {
+      "claim_id": "CLM-0412",
+      "filed_on": "2024-08-19",
+      "incident_date": "2024-08-09",
+      "claim_type": "baggage_delay",
+      "summary": "Checked bag arrived 30 hours late in Lisbon",
+      "outcome": "approved",
+      "amount_paid": 140.0
+    }
+  ]
+}

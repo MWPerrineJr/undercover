@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3007",
+  "name": "Greg Kowalski",
+  "email": "greg.kowalski@example.com",
+  "phone": "+1 412 555 0178",
+  "date_of_birth": "1990-04-18",
+  "address": {
+    "street": "5523 Butler Street",
+    "city": "Pittsburgh",
+    "state": "PA",
+    "zip": "15201"
+  },
+  "customer_since": "2026-06-02",
+  "previous_claims": []
+}

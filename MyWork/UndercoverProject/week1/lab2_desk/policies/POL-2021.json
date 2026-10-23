@@ -1,0 +1,20 @@
+{
+  "policy_id": "POL-2021",
+  "customer_id": "CUS-3021",
+  "plan": "premium",
+  "add_ons": [
+    "electronics_plus"
+  ],
+  "purchased_on": "2026-05-20",
+  "sold_through": "Skylark Airways checkout",
+  "trip": {
+    "destination": "Buenos Aires, Argentina",
+    "departs_on": "2026-07-02",
+    "returns_on": "2026-07-12",
+    "trip_cost": 3300.0
+  },
+  "travelers": [
+    "Camille Fontaine"
+  ],
+  "status": "active"
+}

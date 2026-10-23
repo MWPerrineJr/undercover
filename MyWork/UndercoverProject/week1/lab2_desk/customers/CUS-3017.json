@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3017",
+  "name": "Emily Nguyen",
+  "email": "emily.nguyen@example.com",
+  "phone": "+1 503 555 0137",
+  "date_of_birth": "1996-10-13",
+  "address": {
+    "street": "3316 SE Division Street",
+    "city": "Portland",
+    "state": "OR",
+    "zip": "97202"
+  },
+  "customer_since": "2026-06-11",
+  "previous_claims": []
+}

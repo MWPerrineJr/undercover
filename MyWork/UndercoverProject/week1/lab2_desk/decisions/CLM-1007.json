@@ -1,0 +1,19 @@
+{
+  "claim_id": "CLM-1007",
+  "decision": "approve",
+  "payout": 50.0,
+  "calculation": [
+    "Item: Smartphone, 256 GB, replacement cost claimed $1,099.00",
+    "Eligible amount: amount claimed or per-item limit, whichever is lower -> $150.00 (Economy per-item limit)",
+    "Less amount paid by a carrier or other party for the same loss: $0.00",
+    "Less Economy deductible (Baggage and Personal Effects, once per claim): -$100.00",
+    "Subtotal: $50.00",
+    "Cap at Baggage and Personal Effects plan maximum ($750): $50.00 (below cap)",
+    "Payout: $50.00"
+  ],
+  "section_relied_on": "Policy Wording section 5 (Baggage and Personal Effects), applied with sections 1 and 10",
+  "reason": "The phone was accidentally damaged during the covered trip (Stockholm, 2026-07-13, inside the 2026-07-10 to 2026-07-17 trip) and the claim was filed within the 90-day window, with a repair report stating it is beyond economical repair and a replacement receipt as required for accidental damage. No exclusion applies and no other party has paid. Under section 5 the item counts at the Economy per-item limit of $150 rather than the $1,099 claimed, and the $100 Economy deductible comes off, giving a payout of $50, which is within the $750 benefit maximum.",
+  "letter": "Dear Mr. Kowalski,\n\nThank you for your claim for your phone, and I'm sorry about the shower incident. We're approving your claim and paying $50.00.\n\nHere is how we worked it out:\n- Phone replacement cost claimed: $1,099.00\n- Capped at your Economy per-item limit: $150.00\n- Less your $100.00 deductible: -$100.00\n- Amount we pay: $50.00\n\nYour claim is covered under section 5 (Baggage and Personal Effects) of your policy. The per-item limit on your plan is $150, and the $100 deductible applies once per claim to this benefit, so the payment is lower than the amount you claimed.\n\nOur best,\nUnderCover Travel Insurance Claims",
+  "decided_by": "claim-handler subagent",
+  "decided_at": "2026-09-01"
+}

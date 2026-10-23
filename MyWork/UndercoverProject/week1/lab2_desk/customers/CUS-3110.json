@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3110",
+  "name": "Amara Osei",
+  "email": "amara.osei@example.com",
+  "phone": "+1 202 555 0175",
+  "date_of_birth": "1990-12-12",
+  "address": {
+    "street": "1423 T Street NW",
+    "city": "Washington",
+    "state": "DC",
+    "zip": "20009"
+  },
+  "customer_since": "2025-03-14",
+  "previous_claims": []
+}

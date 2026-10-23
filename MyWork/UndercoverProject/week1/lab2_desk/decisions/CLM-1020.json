@@ -1,0 +1,17 @@
+{
+  "claim_id": "CLM-1020",
+  "decision": "approve",
+  "payout": 240.0,
+  "calculation": [
+    "Prescription sunglasses (personal item): claimed $240.00, per-item limit on First $500.00, so eligible at $240.00",
+    "Amount paid by a carrier or other party for the same loss: $0.00",
+    "First plan deductible for Baggage and Personal Effects: $0.00",
+    "Total: $240.00, within the First plan Baggage and Personal Effects maximum of $3,000.00",
+    "Payout: $240.00"
+  ],
+  "section_relied_on": "Policy wording section 5 (Baggage and Personal Effects), read with Claims Manual section 7 (Interpretation notes: Wild animals)",
+  "reason": "The sunglasses were lost during the covered trip (16-28 August 2026) when a macaque took them at Uluwatu Temple; under the Manual's 'Wild animals' note (section 7) a loss caused by a wild animal is treated as accidental loss or accidental damage, not theft, so no police report is needed and the vermin/insects/pets exclusion does not apply. The required evidence is on file: a written statement from a licensed guide and the $240 optician receipt as proof of replacement cost. The claim was filed on 1 September 2026, within the 90-day window, and the item is under the $500 per-item limit with a $0 deductible, so the full $240 is payable.",
+  "decided_by": "claim-handler subagent",
+  "decided_at": "2026-09-02",
+  "letter": "Dear Ms Rahman,\n\nThank you for your claim, and I'm sorry your sunglasses were taken by a macaque at Uluwatu Temple. We are pleased to tell you that we can pay your claim in full: $240.00.\n\nHere is how we worked it out:\n- Prescription sunglasses, replacement cost: $240.00 (within your First plan's $500 per-item limit)\n- Deductible on your plan: $0.00\n- Total payable: $240.00\n\nWe treated the loss as accidental loss, because it was caused by a wild animal rather than a theft, so you did not need a police report. The letter from your licensed guide and the receipt from Optik Denpasar were exactly the evidence we needed, and thank you for sending them.\n\nThe payment of $240.00 will be released to you shortly.\n\nWith best wishes for the rest of your trip,\nClaims Team, UnderCover Travel Insurance"
+}

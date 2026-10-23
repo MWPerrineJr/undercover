@@ -1,0 +1,19 @@
+{
+  "policy_id": "POL-2101",
+  "customer_id": "CUS-3101",
+  "plan": "first",
+  "add_ons": [],
+  "purchased_on": "2026-04-15",
+  "sold_through": "Meridian Air checkout",
+  "trip": {
+    "destination": "Round the world: London, Suez, Mumbai, Kolkata, Hong Kong, Yokohama, San Francisco, New York",
+    "departs_on": "2026-06-01",
+    "returns_on": "2026-08-19",
+    "trip_cost": 18400.0
+  },
+  "travelers": [
+    "Phil Fogg",
+    "Jean Passepartout"
+  ],
+  "status": "active"
+}

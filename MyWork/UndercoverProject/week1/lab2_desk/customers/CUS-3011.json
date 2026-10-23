@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3011",
+  "name": "Owen Gallagher",
+  "email": "owen.gallagher@example.com",
+  "phone": "+1 617 555 0182",
+  "date_of_birth": "1990-09-02",
+  "address": {
+    "street": "31 Dartmouth Street, Apt 2",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02116"
+  },
+  "customer_since": "2026-04-30",
+  "previous_claims": []
+}

@@ -1,0 +1,32 @@
+{
+  "claim_id": "CLM-1007",
+  "policy_id": "POL-2007",
+  "customer_id": "CUS-3007",
+  "claim_type": "baggage",
+  "submitted_on": "2026-07-22",
+  "incident_date": "2026-07-13",
+  "incident_location": "Stockholm, Sweden",
+  "summary": "Phone dropped in the hotel shower",
+  "story": "I dropped my phone in the shower at my hotel in Stockholm on July 13. I know how that sounds. It was on the soap shelf playing music, I was singing along, and during the key change I knocked it off the shelf. It landed screen down in about an inch of water and stayed there longer than it should have, because I had shampoo in my eyes. A repair shop looked at it the next day and said the liquid damage was too extensive to repair. I am claiming the cost of the replacement phone, which was $1,099.",
+  "items": [
+    {
+      "description": "Smartphone, 256 GB, replacement cost",
+      "category": "electronics",
+      "amount": 1099.0
+    }
+  ],
+  "amount_claimed": 1099.0,
+  "documents": [
+    {
+      "name": "Repair shop report",
+      "type": "repair_report",
+      "content": "Mobilkliniken, Drottninggatan, Stockholm, July 14, 2026. Customer: Greg Kowalski. Smartphone inspected. Liquid damage indicators triggered, corrosion on the logic board, display not responding. Beyond economical repair."
+    },
+    {
+      "name": "Replacement receipt",
+      "type": "receipt",
+      "content": "Elektronikhuset, Stockholm, July 14, 2026. Smartphone, 256 GB: $1,099.00. Paid by card, G. Kowalski."
+    }
+  ],
+  "status": "open"
+}

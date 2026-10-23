@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2125",
+  "customer_id": "CUS-3125",
+  "plan": "economy",
+  "add_ons": [],
+  "purchased_on": "2026-07-10",
+  "sold_through": "Northwind Airlines checkout",
+  "trip": {
+    "destination": "Zurich, Switzerland",
+    "departs_on": "2026-08-03",
+    "returns_on": "2026-08-12",
+    "trip_cost": 2400.0
+  },
+  "travelers": [
+    "Nathan Brandt"
+  ],
+  "status": "active"
+}

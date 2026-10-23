@@ -1,0 +1,34 @@
+{
+  "customer_id": "CUS-3125",
+  "name": "Nathan Brandt",
+  "email": "nathan.brandt@example.com",
+  "phone": "+1 314 555 0186",
+  "date_of_birth": "1980-05-06",
+  "address": {
+    "street": "6235 Pershing Avenue",
+    "city": "St. Louis",
+    "state": "MO",
+    "zip": "63130"
+  },
+  "customer_since": "2023-02-14",
+  "previous_claims": [
+    {
+      "claim_id": "CLM-0899",
+      "filed_on": "2025-11-12",
+      "incident_date": "2025-11-03",
+      "claim_type": "trip_delay",
+      "summary": "Eight hour delay leaving Frankfurt",
+      "outcome": "approved",
+      "amount_paid": 210.0
+    },
+    {
+      "claim_id": "CLM-0968",
+      "filed_on": "2026-05-20",
+      "incident_date": "2026-05-11",
+      "claim_type": "baggage",
+      "summary": "Camera left on a train seat in Milan",
+      "outcome": "declined",
+      "amount_paid": 0.0
+    }
+  ]
+}

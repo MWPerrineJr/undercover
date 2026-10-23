@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3004",
+  "name": "Danielle Okafor",
+  "email": "danielle.okafor@example.com",
+  "phone": "+1 404 555 0166",
+  "date_of_birth": "1985-01-30",
+  "address": {
+    "street": "377 Glenwood Avenue SE",
+    "city": "Atlanta",
+    "state": "GA",
+    "zip": "30312"
+  },
+  "customer_since": "2025-02-17",
+  "previous_claims": []
+}

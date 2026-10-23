@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3121",
+  "name": "Philip Sherman",
+  "email": "philip.sherman@example.com",
+  "phone": "+1 619 555 0124",
+  "date_of_birth": "1968-10-30",
+  "address": {
+    "street": "3675 Third Avenue",
+    "city": "San Diego",
+    "state": "CA",
+    "zip": "92103"
+  },
+  "customer_since": "2026-05-20",
+  "previous_claims": []
+}

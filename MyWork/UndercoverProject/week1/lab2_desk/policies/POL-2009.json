@@ -1,0 +1,20 @@
+{
+  "policy_id": "POL-2009",
+  "customer_id": "CUS-3009",
+  "plan": "premium",
+  "add_ons": [
+    "electronics_plus"
+  ],
+  "purchased_on": "2026-06-08",
+  "sold_through": "Skylark Airways checkout",
+  "trip": {
+    "destination": "Barcelona, Spain",
+    "departs_on": "2026-07-18",
+    "returns_on": "2026-07-26",
+    "trip_cost": 2750.0
+  },
+  "travelers": [
+    "Sofia Reyes"
+  ],
+  "status": "active"
+}

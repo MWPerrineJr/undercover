@@ -1,0 +1,19 @@
+{
+  "policy_id": "POL-2123",
+  "customer_id": "CUS-3123",
+  "plan": "first",
+  "add_ons": [],
+  "purchased_on": "2026-04-22",
+  "sold_through": "TripNest checkout",
+  "trip": {
+    "destination": "Athens and Santorini, Greece",
+    "departs_on": "2026-06-25",
+    "returns_on": "2026-07-06",
+    "trip_cost": 9800.0
+  },
+  "travelers": [
+    "Douglas Pruitt",
+    "Linda Pruitt"
+  ],
+  "status": "active"
+}

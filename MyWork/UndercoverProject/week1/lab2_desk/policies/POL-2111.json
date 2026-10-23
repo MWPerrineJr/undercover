@@ -1,0 +1,20 @@
+{
+  "policy_id": "POL-2111",
+  "customer_id": "CUS-3111",
+  "plan": "first",
+  "add_ons": [
+    "adventure_sports"
+  ],
+  "purchased_on": "2026-05-30",
+  "sold_through": "Meridian Air checkout",
+  "trip": {
+    "destination": "Cozumel, Mexico",
+    "departs_on": "2026-07-05",
+    "returns_on": "2026-07-12",
+    "trip_cost": 3900.0
+  },
+  "travelers": [
+    "Leilani Kahale"
+  ],
+  "status": "active"
+}

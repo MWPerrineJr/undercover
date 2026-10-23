@@ -1,0 +1,32 @@
+{
+  "claim_id": "CLM-1020",
+  "policy_id": "POL-2020",
+  "customer_id": "CUS-3020",
+  "claim_type": "baggage",
+  "submitted_on": "2026-09-01",
+  "incident_date": "2026-08-19",
+  "incident_location": "Uluwatu, Bali, Indonesia",
+  "summary": "Prescription sunglasses stolen by a monkey at Uluwatu Temple",
+  "story": "On August 19 I visited Uluwatu Temple in Bali. A macaque jumped onto my shoulder from a wall, stole my prescription sunglasses off my face and ran to the cliff edge with them. Our guide tried to trade for them, which he says usually works. The monkey turned down a banana and then a bag of peanuts, and in the end it dropped my sunglasses over the cliff. I asked at the police post by the temple gate about reporting the theft, and the officer smiled and said they do not take reports about the monkeys. So I asked our guide to write a letter instead, which is attached. I need prescription lenses to drive, so I had a replacement pair made in Denpasar the next day for $240.",
+  "items": [
+    {
+      "description": "Prescription sunglasses, replacement pair",
+      "category": "personal_item",
+      "amount": 240.0
+    }
+  ],
+  "amount_claimed": 240.0,
+  "documents": [
+    {
+      "name": "Letter from the tour guide",
+      "type": "letter",
+      "content": "Bali Heritage Tours, August 19, 2026. I am a licensed guide and I accompanied Ms. Nadia Rahman at Uluwatu Temple today. At about 5 pm a long-tailed macaque took the sunglasses from her face. I offered fruit and peanuts in exchange, as we normally do. The macaque refused and dropped the sunglasses from the cliff into the sea. They could not be recovered. I Made Suardana, guide license 3381."
+    },
+    {
+      "name": "Optician receipt",
+      "type": "receipt",
+      "content": "Optik Denpasar, August 20, 2026. Prescription sunglasses, frame and single vision tinted lenses, for Nadia Rahman: $240.00."
+    }
+  ],
+  "status": "open"
+}

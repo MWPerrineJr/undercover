@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3107",
+  "name": "Gloria Esposito",
+  "email": "gloria.esposito@example.com",
+  "phone": "+1 713 555 0128",
+  "date_of_birth": "1966-04-25",
+  "address": {
+    "street": "1910 Harold Street",
+    "city": "Houston",
+    "state": "TX",
+    "zip": "77098"
+  },
+  "customer_since": "2026-06-24",
+  "previous_claims": []
+}

@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3012",
+  "name": "Hadley Richards",
+  "email": "hadley.richards@example.com",
+  "phone": "+1 708 555 0122",
+  "date_of_birth": "1991-11-09",
+  "address": {
+    "street": "339 North Oak Park Avenue",
+    "city": "Oak Park",
+    "state": "IL",
+    "zip": "60302"
+  },
+  "customer_since": "2026-05-30",
+  "previous_claims": []
+}

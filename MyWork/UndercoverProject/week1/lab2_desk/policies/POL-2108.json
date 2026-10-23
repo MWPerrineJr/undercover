@@ -1,0 +1,19 @@
+{
+  "policy_id": "POL-2108",
+  "customer_id": "CUS-3108",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-06-18",
+  "sold_through": "TripNest checkout",
+  "trip": {
+    "destination": "Los Angeles, California, by rail",
+    "departs_on": "2026-07-16",
+    "returns_on": "2026-07-26",
+    "trip_cost": 2900.0
+  },
+  "travelers": [
+    "Marjorie Keane",
+    "Howard Keane"
+  ],
+  "status": "active"
+}

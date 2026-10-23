@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3114",
+  "name": "Arthur Dent",
+  "email": "arthur.dent@example.com",
+  "phone": "+1 781 555 0142",
+  "date_of_birth": "1984-03-11",
+  "address": {
+    "street": "42 Country Lane",
+    "city": "Westwood",
+    "state": "MA",
+    "zip": "02090"
+  },
+  "customer_since": "2026-05-14",
+  "previous_claims": []
+}

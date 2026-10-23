@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2102",
+  "customer_id": "CUS-3102",
+  "plan": "economy",
+  "add_ons": [],
+  "purchased_on": "2026-07-25",
+  "sold_through": "Northwind Airlines checkout",
+  "trip": {
+    "destination": "San Francisco, California",
+    "departs_on": "2026-08-20",
+    "returns_on": "2026-08-25",
+    "trip_cost": 1600.0
+  },
+  "travelers": [
+    "Tyler Brooks"
+  ],
+  "status": "active"
+}

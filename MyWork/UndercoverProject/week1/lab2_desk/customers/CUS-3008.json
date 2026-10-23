@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3008",
+  "name": "Dorothy Gale",
+  "email": "dorothy.gale@example.com",
+  "phone": "+1 620 555 0139",
+  "date_of_birth": "2002-06-10",
+  "address": {
+    "street": "Rural Route 2, Box 39",
+    "city": "Liberal",
+    "state": "KS",
+    "zip": "67901"
+  },
+  "customer_since": "2026-04-17",
+  "previous_claims": []
+}

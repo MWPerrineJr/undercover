@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3013",
+  "name": "Brian O'Connell",
+  "email": "brian.oconnell@example.com",
+  "phone": "+1 773 555 0190",
+  "date_of_birth": "1980-08-16",
+  "address": {
+    "street": "4417 North Damen Avenue",
+    "city": "Chicago",
+    "state": "IL",
+    "zip": "60625"
+  },
+  "customer_since": "2026-07-01",
+  "previous_claims": []
+}

@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2019",
+  "customer_id": "CUS-3019",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-07-30",
+  "sold_through": "Meridian Air checkout",
+  "trip": {
+    "destination": "Bogota, Colombia",
+    "departs_on": "2026-08-14",
+    "returns_on": "2026-08-18",
+    "trip_cost": 1400.0
+  },
+  "travelers": [
+    "Victor Salazar"
+  ],
+  "status": "active"
+}

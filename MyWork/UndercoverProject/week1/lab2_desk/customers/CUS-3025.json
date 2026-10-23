@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3025",
+  "name": "Curtis Ballard",
+  "email": "curtis.ballard@example.com",
+  "phone": "+1 702 555 0156",
+  "date_of_birth": "1972-12-12",
+  "address": {
+    "street": "8021 West Sahara Avenue, Unit 204",
+    "city": "Las Vegas",
+    "state": "NV",
+    "zip": "89117"
+  },
+  "customer_since": "2025-06-27",
+  "previous_claims": []
+}

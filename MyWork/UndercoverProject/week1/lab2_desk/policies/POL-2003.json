@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2003",
+  "customer_id": "CUS-3003",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-05-04",
+  "sold_through": "TripNest checkout",
+  "trip": {
+    "destination": "Lisbon, Portugal",
+    "departs_on": "2026-06-22",
+    "returns_on": "2026-07-01",
+    "trip_cost": 2900.0
+  },
+  "travelers": [
+    "Aiko Tanaka"
+  ],
+  "status": "active"
+}

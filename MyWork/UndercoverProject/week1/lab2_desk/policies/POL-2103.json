@@ -1,0 +1,19 @@
+{
+  "policy_id": "POL-2103",
+  "customer_id": "CUS-3103",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-05-01",
+  "sold_through": "Northwind Airlines checkout",
+  "trip": {
+    "destination": "Hanoi and Sapa, Vietnam",
+    "departs_on": "2026-06-08",
+    "returns_on": "2026-06-20",
+    "trip_cost": 3900.0
+  },
+  "travelers": [
+    "Dennis Kaminski",
+    "Carol Kaminski"
+  ],
+  "status": "active"
+}

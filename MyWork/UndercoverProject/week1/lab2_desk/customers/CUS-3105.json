@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3105",
+  "name": "Daniel Cho",
+  "email": "daniel.cho@example.com",
+  "phone": "+1 408 555 0155",
+  "date_of_birth": "1987-06-21",
+  "address": {
+    "street": "642 Coe Avenue",
+    "city": "San Jose",
+    "state": "CA",
+    "zip": "95125"
+  },
+  "customer_since": "2026-03-28",
+  "previous_claims": []
+}

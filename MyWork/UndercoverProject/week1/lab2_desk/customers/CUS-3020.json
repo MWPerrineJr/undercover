@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3020",
+  "name": "Nadia Rahman",
+  "email": "nadia.rahman@example.com",
+  "phone": "+1 718 555 0152",
+  "date_of_birth": "1992-05-19",
+  "address": {
+    "street": "214 Dean Street",
+    "city": "Brooklyn",
+    "state": "NY",
+    "zip": "11217"
+  },
+  "customer_since": "2025-11-03",
+  "previous_claims": []
+}

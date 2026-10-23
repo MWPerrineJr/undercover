@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3021",
+  "name": "Camille Fontaine",
+  "email": "camille.fontaine@example.com",
+  "phone": "+1 773 555 0148",
+  "date_of_birth": "1992-02-19",
+  "address": {
+    "street": "3140 North Broadway, Apt 4F",
+    "city": "Chicago",
+    "state": "IL",
+    "zip": "60657"
+  },
+  "customer_since": "2026-05-20",
+  "previous_claims": []
+}

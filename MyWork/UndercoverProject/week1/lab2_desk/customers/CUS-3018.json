@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3018",
+  "name": "Hector Villanueva",
+  "email": "hector.villanueva@example.com",
+  "phone": "+1 210 555 0139",
+  "date_of_birth": "1987-07-04",
+  "address": {
+    "street": "418 King William Street",
+    "city": "San Antonio",
+    "state": "TX",
+    "zip": "78204"
+  },
+  "customer_since": "2026-05-09",
+  "previous_claims": []
+}

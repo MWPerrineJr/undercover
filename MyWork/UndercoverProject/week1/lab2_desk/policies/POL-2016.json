@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2016",
+  "customer_id": "CUS-3016",
+  "plan": "economy",
+  "add_ons": [],
+  "purchased_on": "2026-06-20",
+  "sold_through": "Skylark Airways checkout",
+  "trip": {
+    "destination": "Mexico City, Mexico",
+    "departs_on": "2026-07-20",
+    "returns_on": "2026-07-27",
+    "trip_cost": 1700.0
+  },
+  "travelers": [
+    "Robert Haines"
+  ],
+  "status": "active"
+}

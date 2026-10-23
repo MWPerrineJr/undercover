@@ -1,0 +1,19 @@
+{
+  "policy_id": "POL-2113",
+  "customer_id": "CUS-3113",
+  "plan": "first",
+  "add_ons": [],
+  "purchased_on": "2026-06-15",
+  "sold_through": "Skylark Airways checkout",
+  "trip": {
+    "destination": "Reykjavik, Iceland",
+    "departs_on": "2026-08-21",
+    "returns_on": "2026-08-29",
+    "trip_cost": 6100.0
+  },
+  "travelers": [
+    "Grace Liu",
+    "Ben Liu"
+  ],
+  "status": "active"
+}

@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2106",
+  "customer_id": "CUS-3106",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-05-18",
+  "sold_through": "Skylark Airways checkout",
+  "trip": {
+    "destination": "South Island, New Zealand",
+    "departs_on": "2026-07-02",
+    "returns_on": "2026-07-16",
+    "trip_cost": 5200.0
+  },
+  "travelers": [
+    "Colin Meadows"
+  ],
+  "status": "active"
+}

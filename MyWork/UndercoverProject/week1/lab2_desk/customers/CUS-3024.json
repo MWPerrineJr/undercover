@@ -1,0 +1,25 @@
+{
+  "customer_id": "CUS-3024",
+  "name": "Isabel Moreno",
+  "email": "isabel.moreno@example.com",
+  "phone": "+1 718 555 0152",
+  "date_of_birth": "1995-03-28",
+  "address": {
+    "street": "37-12 82nd Street, Apt 4C",
+    "city": "Jackson Heights",
+    "state": "NY",
+    "zip": "11372"
+  },
+  "customer_since": "2026-06-01",
+  "previous_claims": [
+    {
+      "claim_id": "CLM-0987",
+      "filed_on": "2026-07-16",
+      "incident_date": "2026-07-08",
+      "claim_type": "baggage",
+      "summary": "Phone snatched in La Candelaria, Bogota",
+      "outcome": "approved",
+      "amount_paid": 250.0
+    }
+  ]
+}

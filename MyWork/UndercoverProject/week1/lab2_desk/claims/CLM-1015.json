@@ -1,0 +1,37 @@
+{
+  "claim_id": "CLM-1015",
+  "policy_id": "POL-2015",
+  "customer_id": "CUS-3015",
+  "claim_type": "trip_interruption",
+  "submitted_on": "2026-07-03",
+  "incident_date": "2026-06-21",
+  "incident_location": "Paris, France",
+  "summary": "Flew home from Paris on arrival after leaving a child at home",
+  "story": "We flew from Chicago to Paris on June 20 as a family of six. Somewhere over the Atlantic I realized that our youngest son, Kevin, who is eight, was not on the plane. We had overslept, we left for the airport in a rush and the head count in the van was wrong. I took the first available flight home the moment we landed in Paris. Kevin was fine. In his words, he had handled it. I am claiming my one-way fare home and my share of the prepaid hotel nights in Paris that I did not use.",
+  "items": [
+    {
+      "description": "One-way economy fare, Paris to Chicago",
+      "category": "transport",
+      "amount": 1920.0
+    },
+    {
+      "description": "Unused share of prepaid hotel nights",
+      "category": "trip_cost",
+      "amount": 420.0
+    }
+  ],
+  "amount_claimed": 2340.0,
+  "documents": [
+    {
+      "name": "Airline ticket receipt",
+      "type": "receipt",
+      "content": "Meridian Air, ticket issued June 21, 2026. Passenger Kate Callister. Paris CDG to Chicago ORD, economy, one way: $1,920.00."
+    },
+    {
+      "name": "Hotel statement",
+      "type": "letter",
+      "content": "Hotel Saint-Honore, Paris, June 30, 2026. Booking for six guests, June 21 to June 30, prepaid and not refundable. One guest, Mrs. K. Callister, did not check in. Her share of the prepaid room cost for the unused nights: $420.00."
+    }
+  ],
+  "status": "open"
+}

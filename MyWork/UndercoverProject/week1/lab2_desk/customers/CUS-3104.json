@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3104",
+  "name": "Walter Ferris",
+  "email": "walter.ferris@example.com",
+  "phone": "+1 941 555 0106",
+  "date_of_birth": "1953-06-14",
+  "address": {
+    "street": "1711 Siesta Drive",
+    "city": "Sarasota",
+    "state": "FL",
+    "zip": "34239"
+  },
+  "customer_since": "2026-05-12",
+  "previous_claims": []
+}

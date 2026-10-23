@@ -1,0 +1,15 @@
+{
+  "customer_id": "CUS-3118",
+  "name": "Julian Okoro",
+  "email": "julian.okoro@example.com",
+  "phone": "+1 919 555 0137",
+  "date_of_birth": "1984-02-19",
+  "address": {
+    "street": "2207 Glenwood Avenue",
+    "city": "Raleigh",
+    "state": "NC",
+    "zip": "27608"
+  },
+  "customer_since": "2026-05-04",
+  "previous_claims": []
+}

@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2114",
+  "customer_id": "CUS-3114",
+  "plan": "premium",
+  "add_ons": [],
+  "purchased_on": "2026-05-14",
+  "sold_through": "Meridian Air checkout",
+  "trip": {
+    "destination": "Guildford and the Surrey Hills, England",
+    "departs_on": "2026-06-29",
+    "returns_on": "2026-07-10",
+    "trip_cost": 3100.0
+  },
+  "travelers": [
+    "Arthur Dent"
+  ],
+  "status": "active"
+}

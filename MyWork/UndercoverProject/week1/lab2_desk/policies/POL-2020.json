@@ -1,0 +1,18 @@
+{
+  "policy_id": "POL-2020",
+  "customer_id": "CUS-3020",
+  "plan": "first",
+  "add_ons": [],
+  "purchased_on": "2026-06-24",
+  "sold_through": "Skylark Airways checkout",
+  "trip": {
+    "destination": "Bali, Indonesia",
+    "departs_on": "2026-08-16",
+    "returns_on": "2026-08-28",
+    "trip_cost": 5600.0
+  },
+  "travelers": [
+    "Nadia Rahman"
+  ],
+  "status": "active"
+}

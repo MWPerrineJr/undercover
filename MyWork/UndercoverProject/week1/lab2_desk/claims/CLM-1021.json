@@ -1,0 +1,47 @@
+{
+  "claim_id": "CLM-1021",
+  "policy_id": "POL-2021",
+  "customer_id": "CUS-3021",
+  "claim_type": "baggage",
+  "submitted_on": "2026-07-15",
+  "incident_date": "2026-07-06",
+  "incident_location": "Buenos Aires, Argentina",
+  "summary": "Tote bag snatched from her shoulder in Buenos Aires",
+  "story": "On July 6 I was walking along Avenida Santa Fe in Buenos Aires when a man on the back of a motorbike pulled my tote bag off my shoulder and they rode away. I went to the tourist police office on Avenida Corrientes that afternoon and made a report. The bag held my headphones, my e-reader and the handheld game console I take on long flights. I have the receipts for all three, and I bought the Electronics Plus add-on for exactly this kind of thing. The tote itself was a gift, so I have no receipt for it, but I have put what it costs in the store.",
+  "items": [
+    {
+      "description": "Noise-canceling headphones",
+      "category": "electronics",
+      "amount": 429.0
+    },
+    {
+      "description": "E-reader",
+      "category": "electronics",
+      "amount": 180.0
+    },
+    {
+      "description": "Handheld game console",
+      "category": "electronics",
+      "amount": 399.0
+    },
+    {
+      "description": "Canvas and leather tote bag",
+      "category": "luggage",
+      "amount": 95.0
+    }
+  ],
+  "amount_claimed": 1103.0,
+  "documents": [
+    {
+      "name": "Police report",
+      "type": "police_report",
+      "content": "Policia de la Ciudad, Comisaria del Turista, Avenida Corrientes 436, Buenos Aires. Report 2026-0714482, made July 6, 2026 at 15:20 by Camille Fontaine, US citizen. Robbery by two men on a motorcycle on Avenida Santa Fe at about 13:40 the same day. One tote bag with headphones, an e-reader and a game console. Suspects not identified."
+    },
+    {
+      "name": "Electronics receipts",
+      "type": "receipt",
+      "content": "Soundstage Audio, Chicago, December 3, 2025. Over-ear noise-canceling headphones: $429.00. Lakeview Books and Tech, Chicago, January 22, 2026. E-reader, 32 GB: $180.00. Arcade Row Games, Chicago, March 14, 2026. Handheld game console: $399.00. All paid by card ending 5127, Camille Fontaine."
+    }
+  ],
+  "status": "open"
+}
