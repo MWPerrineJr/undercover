@@ -66,4 +66,8 @@ test("plans a capped run, ticks the to-do list off and leaves the rest waiting",
     page.getByRole("region", { name: "Decision", exact: true }),
   ).toContainText("decline");
   await expect(page.getByText(/Manual sections/)).toBeVisible();
+  const reads = page.getByRole("region", { name: "What the agent read" });
+  await expect(reads.getByRole("listitem")).toHaveCount(2);
+  await expect(reads).toContainText("Claims manual section 9: Repeat claims");
+  await expect(reads).toContainText("Policy wording section 3: Trip Delay");
 });

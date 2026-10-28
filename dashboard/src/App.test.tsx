@@ -5,6 +5,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import { App } from "./App";
@@ -191,4 +192,18 @@ it("ignores a stale claim response after selecting another claim", async () => {
     await Promise.resolve();
   });
   expect(screen.queryByRole("heading", { name: "Flight canceled" })).toBeNull();
+});
+
+it("shows the sections the agent read and the sections it cited", async () => {
+  const { claim } = mockBackend();
+  Object.assign(claim, approved, { thread_id: "thread-1" });
+  render(<App />);
+  const reads = await screen.findByRole("region", {
+    name: "What the agent read",
+  });
+  expect(
+    within(reads).getByText("Claims manual section 9: Repeat claims"),
+  ).toBeDefined();
+  expect(screen.getByText("Policy sections 5, 10")).toBeDefined();
+  expect(screen.getByText("Manual sections 6, 9")).toBeDefined();
 });

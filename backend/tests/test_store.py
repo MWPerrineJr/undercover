@@ -66,6 +66,16 @@ def test_seed_records_and_restart():
             store.record(db, "customers", "missing")
 
 
+@pytest.mark.usefixtures("database")
+def test_a_decision_saved_before_the_manual_still_reads():
+    with store.connect() as db:
+        db.execute(
+            "UPDATE claims SET status='decided', decision=? WHERE id='CLM-1001'",
+            (json.dumps({"outcome": "approve", "policy_sections": [3]}),),
+        )
+        assert store.claim_record(db, "CLM-1001")["decision"]["manual_sections"] == []
+
+
 def test_seed_file_allowlist(tmp_path, monkeypatch):
     monkeypatch.setenv("UNDERCOVER_DB", str(tmp_path / "allowlist.sqlite3"))
     opened = []

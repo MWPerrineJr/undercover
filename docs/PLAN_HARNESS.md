@@ -101,16 +101,16 @@ Success criteria:
 
 Show the plan and the lookups.
 
-Queue page: a cap input beside Run queue, and a to-do list panel for the current run with state chips, the current item highlighted and the summary when the run finishes, refreshing live as it does today. Claim page: a "What the agent read" list built from `read` activity, showing document and section titles, and decision citations for both wording and manual sections. Instructions page: both texts with headings. `format.ts` gets a label and badge for "left for a handler".
+Queue page: the cap input and the live to-do list panel were built in Phase 3, and the "left for a handler" badge in Phase 4. Claim page: a "What the agent read" list built from `read` activity, showing document and section titles, and decision citations for both wording and manual sections. Instructions page: both texts with headings. `format.ts` gets a label and badge for "left for a handler".
 
 Success criteria:
 
-- [ ] Vitest covers the to-do list panel (all four states), the cap input and the read list; `npm run check:ts` is green with coverage above 80%.
-- [ ] An e2e test starts a capped run from the dashboard and sees the to-do list fill in, items tick off and the summary appear, with the uncapped claims still in the queue.
-- [ ] An e2e test opens a decided claim and sees the sections the agent read and the cited wording and manual sections.
-- [ ] The instructions page shows both the queue and claim instructions, read only.
-- [ ] Playwright MCP: the queue and claim pages at 390px and 1440px, in light and dark, with no horizontal overflow and no console errors.
-- [ ] `npm run check` is green.
+- [x] Vitest covers the to-do list panel (all four states), the cap input and the read list; `npm run check:ts` is green with coverage above 80%.
+- [x] An e2e test starts a capped run from the dashboard and sees the to-do list fill in, items tick off and the summary appear, with the uncapped claims still in the queue.
+- [x] An e2e test opens a decided claim and sees the sections the agent read and the cited wording and manual sections.
+- [x] The instructions page shows both the queue and claim instructions, read only.
+- [x] Playwright MCP: the queue and claim pages at 390px and 1440px, in light and dark, with no horizontal overflow and no console errors. This found a real bug: a decision saved before `manual_sections` existed crashed the claim page, now defaulted in the store. The to-do list panel is checked in the browser during Phase 6's live run.
+- [x] `npm run check` is green.
 
 ## Phase 6: The model, the documents and a live run
 

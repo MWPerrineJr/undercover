@@ -169,6 +169,8 @@ def claim_record(db, claim_id: str) -> dict:
     )
     for field in ("decision", "sign_off", "payment"):
         result[field] = json.loads(row[field]) if row[field] else None
+    if result["decision"]:
+        result["decision"].setdefault("manual_sections", [])
     result["left_for_handler"] = (
         row["attempts"] >= ATTEMPT_LIMIT and result["decision"] is None
     )

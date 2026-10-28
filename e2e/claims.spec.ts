@@ -36,6 +36,12 @@ test("shows the seeded queue, complete evidence and the exact read-only instruct
   await expect(page.locator(".instructions pre")).toHaveText(
     instructions.map((text) => text.text),
   );
+  await expect(
+    page.getByRole("heading", { name: "Working the queue", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Working a claim", exact: true }),
+  ).toBeVisible();
   await expect(page.getByRole("textbox")).toHaveCount(0);
 });
 

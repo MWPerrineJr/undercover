@@ -453,19 +453,21 @@ footer {
   padding: 0 8px 16px;
 }
 .queue-start {
-  display: flex;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
+  gap: 8px;
 }
 .queue-start label {
   font-size: 11px;
   color: var(--muted);
 }
 .queue-start input {
-  width: 56px;
+  width: 64px;
 }
 .queue-start button {
-  flex: 1;
+  grid-column: 1 / -1;
+  width: 100%;
 }
 .queue-runner > p {
   margin: 10px 0 0;
@@ -484,6 +486,13 @@ footer {
 progress {
   width: 100%;
   accent-color: #06d6a0;
+}
+.reads {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
 }
 .todos {
   padding: 0 8px 16px;
@@ -572,6 +581,13 @@ progress {
   .queue nav {
     max-height: max(180px, calc(100vh - 480px));
   }
+}
+.reads {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
 }
 .todos {
   padding: 0 8px 16px;

@@ -171,6 +171,7 @@ export function ClaimDetail({ id, revision, refresh }: Readonly<Props>) {
       </section>
     );
   const { claim, policy, customer, plans, wording, activity } = data;
+  const reads = activity.filter((event) => event.kind === "read");
   const plan = plans.plans.find((p) => p.plan === policy.plan);
   return (
     <article className="claim-detail" aria-label={`Claim ${id}`}>
@@ -196,6 +197,18 @@ export function ClaimDetail({ id, revision, refresh }: Readonly<Props>) {
         </div>
       </header>
       <DecisionPanel details={data} refresh={refresh} />
+      <section className="panel" aria-label="What the agent read">
+        <h2>What the agent read</h2>
+        {reads.length ? (
+          <ul className="reads">
+            {reads.map((event) => (
+              <li key={event.id}>{event.message.replace("Read ", "")}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>Nothing read yet.</p>
+        )}
+      </section>
       <section className="panel" aria-label="Agent activity">
         <h2>Agent activity</h2>
         {activity.length ? (
