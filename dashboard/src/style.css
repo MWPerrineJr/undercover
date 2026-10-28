@@ -529,15 +529,22 @@ progress {
   margin: 12px 0 0;
   font-size: 12px;
 }
-.to_do {
+.badge.to_do {
   background: #e4e8ef;
 }
-.done {
+.badge.done {
   background: #06d6a0;
 }
-.left_for_handler {
-  background: #ef476f;
+.badge.left_for_handler,
+.badge.waiting_for_sign_off {
+  background: #118ab2;
   color: #fff;
+}
+.badge.left_for_handler {
+  background: #ef476f;
+}
+.todo.left_for_handler {
+  outline: 2px solid #ef476f;
 }
 .queue-result {
   text-transform: capitalize;
@@ -624,15 +631,22 @@ progress {
   margin: 12px 0 0;
   font-size: 12px;
 }
-.to_do {
+.badge.to_do {
   background: #e4e8ef;
 }
-.done {
+.badge.done {
   background: #06d6a0;
 }
-.left_for_handler {
-  background: #ef476f;
+.badge.left_for_handler,
+.badge.waiting_for_sign_off {
+  background: #118ab2;
   color: #fff;
+}
+.badge.left_for_handler {
+  background: #ef476f;
+}
+.todo.left_for_handler {
+  outline: 2px solid #ef476f;
 }
 .queue-result {
   font-family: "JetBrains Mono", monospace;

@@ -1,6 +1,6 @@
 # Status
 
-The pilot is complete. All six phases in `docs/PLAN.md` were committed separately. The requested queue runner, finished-claims view and Reset tab are described in `docs/QUEUE.md`.
+The pilot (`docs/PLAN.md`) and the harness (`docs/PLAN_HARNESS.md`) are both complete, each phase committed separately. The agent now organizes its own work: one run works the whole queue up to a cap, plans it as a to-do list the team can watch, hands each claim to a fresh subagent, looks up the sections of the wording and the manual it needs, and puts its own failures right.
 
 ## What is built
 
@@ -34,13 +34,15 @@ Before running an agent, add `OPENROUTER_API_KEY` to the root `.env`. `.env.exam
 
 `npm install` installs the pre-commit hook and Playwright Chromium. `npm run dev` starts both services and watches backend and agent Python code. Stop both with Ctrl+C.
 
-The default model is `openai/gpt-6-luna` with low reasoning effort. Set `MODEL_NAME` to override it, for example `openrouter/free`; the default reasoning setting is omitted for an override. `BACKEND_URL` defaults to http://localhost:8000 and configures the agent's HTTP client and Vite's backend proxy.
+The default model is `deepseek/deepseek-v4.1-flash` with low reasoning effort. Set `MODEL_NAME` to override it, for example `openrouter/free`; the default reasoning setting is omitted for an override. `BACKEND_URL` defaults to http://localhost:8000 and configures the agent's HTTP client and Vite's backend proxy.
 
-## Use the pilot
+## Use it
 
-In Queue, select a claim, inspect its documents and history, and choose Run agent. To process every waiting claim, choose Run queue. It runs on the backend one claim at a time using the configured OpenRouter model, and continues if you close the browser. This uses model API credits. Each snapshot claim is attempted once; failed claims stay waiting for an explicit retry. Already running or decided claims are skipped. The queue moves through waiting, in progress, waiting for sign-off and decided. Activity refreshes while a run is active and shows tool operations/results, decisions, sign-off and simulated payments rather than hidden model reasoning.
+In Queue, select a claim, inspect its documents and history, and choose Run agent for that claim alone. To work the queue, set Claims in this run and choose Run queue. The queue agent plans the run itself, chooses the order and gives each claim to a fresh claim agent, on the backend and using model API credits; it continues if you close the browser. Claims beyond the cap stay waiting. `uv run -m agent --cap 5` and `uv run -m agent --claim CLM-1001` do the same from the command line.
 
-Batch progress shows attempts, failures, skipped claims and the current claim, and survives page refreshes. Finished lists decided claims with their outcomes and payouts; select an entry to inspect its full evidence and activity. Approvals awaiting sign-off stay in Queue until payment completes.
+The to-do list under the run control fills in as the agent plans and ticks off as it works, each item carrying the claim agent's one-line report. When the run closes, its summary for the handlers appears there. The queue moves through waiting, in progress, waiting for sign-off and decided; a claim that failed twice is badged "left for a handler". Activity refreshes while a run is active and shows tool operations, the sections read, decisions, sign-off and simulated payments rather than hidden model reasoning.
+
+Finished lists decided claims with their outcomes and payouts; select an entry to inspect its full evidence, what the agent read and its activity. Approvals awaiting sign-off stay in Queue until payment completes.
 
 Approvals of $1,000 or less are paid by the agent through the separate payment API. Above $1,000, select a handler and choose Sign off and pay. If payment fails after sign-off, the sign-off is retained and Record payment retries only payment. Decline and refer finish without a payment. Referral means a handler needs to exercise judgment or obtain evidence; the pilot does not send customer messages.
 
@@ -48,32 +50,43 @@ Agent instructions shows the backend-owned texts the agent works to, read only. 
 
 ## Persistence and recovery
 
-The default database is `undercover.sqlite3` in the repo root, ignored by git. Set `UNDERCOVER_DB` to choose another file in an existing directory. Only `company.json`, `plans.json`, `policies.json`, `customers.json`, `handlers.json`, `claims.json` and `policy_wording.md` seed the database. Evaluation/held-out claims, security fixtures and the claims manual are not loaded.
+The default database is `undercover.sqlite3` in the repo root, ignored by git. Set `UNDERCOVER_DB` to choose another file in an existing directory. Only `company.json`, `plans.json`, `policies.json`, `customers.json`, `handlers.json`, `claims.json`, `policy_wording.md` and `claims_manual.md` seed the database. Evaluation/held-out claims and security fixtures are not loaded.
 
 If a run fails before saving a decision, its activity records the failure and the claim returns to waiting. Check the key/model and backend configuration, then select Run agent to retry. Model or connection failures have a safe, generic activity message. A retry gets a new thread ID, while earlier activity remains visible.
 
-If the backend stops during work, restart with `npm run dev`. Startup marks interrupted runs as stopped. Claims without decisions return to waiting; saved decisions, sign-offs and payments survive. An unpaid approval offers Record payment once any required sign-off is complete. An interrupted queue run is marked stopped and keeps its recorded progress; choose Run queue again to process remaining waiting claims. There is no automatic model rerun or agent checkpoint resumption. A completed decision cannot be rerun or replaced through the API.
+If the backend stops during work, restart with `npm run dev`. Startup marks interrupted runs as stopped. Claims without decisions return to waiting; saved decisions, sign-offs and payments survive. An unpaid approval offers Record payment once any required sign-off is complete. An interrupted queue run is marked stopped, its to-do list is kept and any item left in progress returns to to-do; choose Run queue again to work the remaining waiting claims. There is no automatic model rerun or agent checkpoint resumption. A completed decision cannot be rerun or replaced through the API.
 
 To start the pilot over, open Reset, type `RESET`, then choose Reset all claims. This permanently clears decisions, handler sign-offs, simulated payments, activity and batch progress, returning all claims to waiting. It retains source evidence, policies, customers/history, plans, handlers and model settings. Reset is blocked until all agents and the queue run have stopped. Opening the tab does not reset anything.
 
 If you want to retain the entire database before resetting, stop the app and copy `undercover.sqlite3` (or the file selected by `UNDERCOVER_DB`) to a backup through your editor's file explorer.
 
-The extension adds `GET /api/queue` for progress, `POST /api/queue/run` (HTTP 202) for a batch, and `POST /api/queue/reset` with `{"confirmation":"RESET"}`. Conflicting starts/resets return 409; missing or incorrect confirmation returns 422.
+`GET /api/queue` reads the current run with its to-do list, `POST /api/queue/run` takes `{"cap": n}` and returns HTTP 202, and `POST /api/queue/reset` takes `{"confirmation":"RESET"}`. The queue agent's own operations live under `/api/queue/{run_id}/`: `waiting`, `todos`, `todos/{claim_id}`, `claims/{claim_id}/start`, `claims/{claim_id}/finish` and `finish`. Conflicting starts, resets, a claim beyond the cap, a claim left for a handler and a close over a missed claim all return 409; missing or incorrect inputs return 422.
 
 ## Verification
 
-The final `npm run check` passed on macOS with Node 26.11.1 and Python 3.12, while the development app remained running on ports 8000/5173:
+`npm run check` passes on macOS with Node 26 and Python 3.12:
 
 - Ruff formatting/lint and pyright: pass, zero type errors.
-- Pytest: 36 tests pass, 99.77% total Python coverage (80% required).
+- Pytest: 64 tests pass, 99.4% total Python coverage (80% required).
 - Prettier, ESLint and strict TypeScript: pass.
-- Vitest: 16 tests pass, 100% statement coverage (80% required).
-- Playwright: 11 tests pass, including normal approval, direct over-limit payment rejection, handler sign-off, decline/referral, failure/retry, refresh persistence, keyboard focus, desktop/mobile layouts in both color modes, two full queue passes, refresh-persistent progress, finished-claim browsing and reset.
+- Vitest: 18 tests pass, 100% statement coverage (80% required).
+- Playwright: 11 tests pass, covering approval, direct over-limit payment rejection, handler sign-off, decline and referral, a failed run and its retry, keyboard focus, desktop and mobile layouts in both color modes, and a capped queue run whose to-do list fills in, retries a claim that failed once and ticks off, leaving the rest waiting.
 
-`uv sync`, `npm install` and `npm run dev` were also verified. The development browser loaded all 25 waiting claims and the health endpoint returned `{"status":"ok"}`. Scripts use uv commands and Node scripts compatible with Windows; a Windows machine was not available for execution.
+No test calls a model. Browser tests start dedicated servers on ports 8010/5174 with a temporary database, and use the real agent loops with scripted models. No test reads `data/evals/`.
 
-Run individual groups with `npm run check:python`, `npm run check:ts` or `npm run e2e`. Browser tests start dedicated servers on ports 8010/5174, use an automatically removed temporary database and never reuse a development server. They use the real agent tool loop with a scripted model; unit tests also use stubs. Queue/reset scenarios use only temporary databases; the development queue was neither executed nor reset for this build. No test calls OpenRouter or reads evaluation answers. Live-model accuracy against handler decisions has not been measured.
+### The live run
 
-Playwright MCP was unavailable in this session, so visual review used the installed Playwright browser. Desktop/light and mobile/dark screenshots were inspected; browser tests additionally cover both modes at 390px and 1440px, with no page errors or horizontal overflow. Restart tests verify full persistence of decisions, activity, sign-offs and payments.
+After reseeding, one run capped at five claims on the default model (`deepseek/deepseek-v4.1-flash`) worked five claims on its own and left the other twenty waiting. The agent chose its own order (CLM-1001, CLM-1008, CLM-1011, CLM-1018, CLM-1010) rather than the queue's, and closed with a summary for the handlers:
 
-No thresholds or rules were weakened, no hooks were skipped, no changes were pushed and no AWS resources were created. The student's pre-existing `package-lock.json` change was preserved byte for byte and excluded from the pilot commits.
+- CLM-1001 approved $420.00 and paid, being at or below the $1,000 limit.
+- CLM-1008 approved $2,240.00 and CLM-1011 approved $1,150.00, both held for a handler's sign-off.
+- CLM-1010 declined, CLM-1018 referred.
+- No claim was decided or paid twice, and no claim needed a second attempt.
+
+On CLM-1001 the agent searched the documents four times and read eleven sections before deciding: wording 1, 3, 9, 10, 11 and 12, and manual 3, 5, 6, 7 and 8. It cited wording 1, 3, 9, 10, 11 and manual 4, 5, 6, 7, 9, 10, and applied the manual's rule that a delay on the way home extends cover to the extra day. The claim page lists every section it read.
+
+The dashboard was checked with the Playwright MCP browser at 390px and 1440px in light and dark: the to-do list filling in and ticking off during the run, the summary at the end, the sections read on each claim page, no horizontal overflow and no console errors. That check found and fixed a crash on decisions saved before `manual_sections` existed.
+
+Accuracy against the handlers' decisions in `data/evals/` has not been measured; that is for a later evaluation runner.
+
+No thresholds or rules were weakened, no hooks were skipped and no changes were pushed.

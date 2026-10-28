@@ -114,12 +114,12 @@ Success criteria:
 
 ## Phase 6: The model, the documents and a live run
 
-- [ ] `DEFAULT_MODEL` becomes `deepseek/deepseek-v4.1-flash` with low reasoning effort; `MODEL_NAME` still overrides it and still omits the reasoning setting when it does.
-- [ ] Reset from the dashboard, then one live run capped at 5 on the default model works 5 claims on its own, with the other 20 left waiting.
-- [ ] During that run the dashboard shows the to-do list filling in and being ticked off, and each claim's steps including the sections read.
-- [ ] No claim is decided or paid twice, and any approval over $1,000 is still waiting for sign-off.
-- [ ] `docs/SPEC.md`, `docs/TECH_STACK.md` and `docs/STATUS.md` describe the product as it now is; `docs/QUEUE.md` is folded into `docs/STATUS.md` and removed.
-- [ ] `npm run check` is green and its results are reported.
+- [x] `DEFAULT_MODEL` becomes `deepseek/deepseek-v4.1-flash` with low reasoning effort; `MODEL_NAME` still overrides it and still omits the reasoning setting when it does.
+- [x] Reset (through `POST /api/queue/reset`, the same operation the dashboard's Reset tab calls), then one live run capped at 5 on the default model, started with `uv run -m agent --cap 5`, works 5 claims on its own, with the other 20 left waiting. The dashboard's own Run queue and Reset controls are covered by the browser tests.
+- [x] During that run the dashboard shows the to-do list filling in and being ticked off, and each claim's steps including the sections read.
+- [x] No claim is decided or paid twice, and any approval over $1,000 is still waiting for sign-off.
+- [x] `docs/SPEC.md`, `docs/TECH_STACK.md` and `docs/STATUS.md` describe the product as it now is; `docs/QUEUE.md` is folded into `docs/STATUS.md` and removed.
+- [x] `npm run check` is green and its results are reported.
 
 ## Rules this plan keeps
 

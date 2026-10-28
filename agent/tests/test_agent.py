@@ -118,7 +118,7 @@ def test_invalid_tool_output(client):
 def test_model_name_and_http_client(monkeypatch):
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
     monkeypatch.delenv("MODEL_NAME", raising=False)
-    assert model_module.model().model_name == "openai/gpt-6-luna"
+    assert model_module.model().model_name == "deepseek/deepseek-v4.1-flash"
     assert model_module.model().reasoning_effort == "low"
     monkeypatch.setenv("MODEL_NAME", "openrouter/free")
     assert model_module.model().model_name == "openrouter/free"
