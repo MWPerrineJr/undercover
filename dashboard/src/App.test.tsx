@@ -126,7 +126,9 @@ it("shows an empty queue", async () => {
       .mockImplementation((path: string) =>
         Promise.resolve(
           Response.json(
-            path === "/api/claims" ? [] : { running: false, total: 0 },
+            path === "/api/claims"
+              ? []
+              : { run_id: null, status: "idle", cap: 0, worked: 0, todos: [] },
           ),
         ),
       ),

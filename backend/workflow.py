@@ -25,20 +25,25 @@ def current(db, claim_id: str, thread_id: str) -> dict:
     return claim
 
 
+def reserve(db, claim_id: str) -> str:
+    """Take a waiting claim for one agent run inside an open transaction."""
+    claim = store.claim_record(db, claim_id)
+    if claim["status"] != "waiting" or claim["decision"] or claim["running"]:
+        raise ConflictError("Only waiting claims can be started")
+    thread_id = str(uuid4())
+    db.execute(
+        "UPDATE claims SET status='in_progress', running=1, thread_id=? WHERE id=?",
+        (thread_id, claim_id),
+    )
+    store.event(db, claim_id, thread_id, "Agent started")
+    return thread_id
+
+
 def start(claim_id: str) -> dict:
     """Reserve a waiting claim for one agent run."""
     with store.connect() as db:
         db.execute("BEGIN IMMEDIATE")
-        claim = store.claim_record(db, claim_id)
-        if claim["status"] != "waiting" or claim["decision"]:
-            raise ConflictError("Only waiting claims can be started")
-        thread_id = str(uuid4())
-        db.execute(
-            "UPDATE claims SET status='in_progress', running=1, thread_id=? WHERE id=?",
-            (thread_id, claim_id),
-        )
-        store.event(db, claim_id, thread_id, "Agent started")
-    return {"thread_id": thread_id}
+        return {"thread_id": reserve(db, claim_id)}
 
 
 def decide(claim_id: str, decision: Decision) -> dict:

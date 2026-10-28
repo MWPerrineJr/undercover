@@ -38,7 +38,10 @@ def test_read_api(client):
     assert client.get("/api/claims/CLM-1001/policy").json()["trip"]
     assert client.get("/api/claims/CLM-1001/customer").json()["previous_claims"]
     names = {i["name"]: i for i in client.get("/api/instructions").json()}
+    assert set(names) == {"queue", "claim"}
     assert "claims manual" in names["claim"]["text"]
+    assert "work_one_claim" in names["queue"]["text"]
+    assert not any("eval" in text["text"].lower() for text in names.values())
     assert client.get("/api/instructions/claim").json() == names["claim"]
     assert client.get("/api/instructions/missing").status_code == 404
     assert len(client.get("/api/handlers").json()) == 3

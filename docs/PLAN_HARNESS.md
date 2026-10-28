@@ -68,17 +68,17 @@ Backend: `runs` table (id, cap, status, summary, timestamps) and `todos` table (
 
 Agent: `agent/queue.py` with `run_queue(run_id, llm=None)` and tools `list_waiting_claims`, `set_todo_list`, `update_todo`, `work_claim`, `finish_run`. The agent chooses the order. Add `agent/__main__.py` so `uv run -m agent --cap 5` starts a capped run and `uv run -m agent --claim CLM-1001` runs one named claim against the running backend.
 
-Instructions: `backend/instructions.py` gains `QUEUE_INSTRUCTIONS`; `GET /api/instructions` returns both texts as a list of `{name, title, text}`, and the dashboard's instructions panel renders both (styled properly in Phase 5).
+Instructions: `backend/instructions.py` gains `QUEUE_INSTRUCTIONS`; `GET /api/instructions` returns both texts as a list of `{name, title, text}`, and the dashboard's instructions panel renders both. The queue page's cap input and to-do list were built here rather than in Phase 5, so the queue UI was written once.
 
 Success criteria:
 
-- [ ] A stub-model test on a fresh temporary database with a cap of 3 decides exactly 3 claims and leaves 22 waiting; `GET /api/queue` shows 3 to-do items `done`, the run `finished` and a non-empty summary.
-- [ ] A to-do item is `in_progress` while its claim is being worked: a stub that records state at each update shows `to_do` -> `in_progress` -> `done`.
-- [ ] `work_claim` on a claim beyond the cap returns `409` and the run still finishes cleanly.
-- [ ] The run order comes from the agent: a stub that picks the two largest claims works exactly those two.
-- [ ] `uv run -m agent --cap 2` and `uv run -m agent --claim CLM-1001` are covered by tests with a stub model, and both exit non-zero when the backend is unreachable.
-- [ ] `GET /api/instructions` returns the queue and claim texts, and neither mentions anything from `data/evals/`.
-- [ ] `npm run check:python` and `npm run check:ts` are green.
+- [x] A stub-model test on a fresh temporary database with a cap of 3 decides exactly 3 claims and leaves 22 waiting; `GET /api/queue` shows 3 to-do items `done`, the run `finished` and a non-empty summary.
+- [x] A to-do item is `in_progress` while its claim is being worked: a stub that records state at each update shows `to_do` -> `in_progress` -> `done`.
+- [x] `work_claim` on a claim beyond the cap returns `409` and the run still finishes cleanly.
+- [x] The run order comes from the agent: a stub that picks the two largest claims works exactly those two.
+- [x] `uv run -m agent --cap 2` and `uv run -m agent --claim CLM-1001` are covered by tests with a stub model, and both exit non-zero when the backend is unreachable.
+- [x] `GET /api/instructions` returns the queue and claim texts, and neither mentions anything from `data/evals/`.
+- [x] `npm run check:python` and `npm run check:ts` are green.
 
 ## Phase 4: Problems put right automatically
 

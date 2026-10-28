@@ -1,181 +1,185 @@
-from concurrent.futures import ThreadPoolExecutor
-from decimal import Decimal
-from threading import Event
-
 import pytest
 
-from backend import queue, runs, store, workflow
-from backend.models import Decision, Payment
+from backend import queue, store
 
 
-def scripted_review(claim_id, thread_id):
-    if claim_id == "CLM-1003":
-        raise ConnectionError("Synthetic failure")
-    amount = Decimal("1250") if claim_id == "CLM-1002" else Decimal("100")
-    workflow.decide(
-        claim_id,
-        Decision(
-            thread_id=thread_id,
-            outcome="approve",
-            payout=amount,
-            calculation=str(amount),
-            explanation="Synthetic. See section 3.",
-            policy_sections=[3],
-            manual_sections=[],
-        ),
-    )
-    if amount <= 1000:
-        workflow.pay(claim_id, Payment(thread_id=thread_id, amount=amount))
+@pytest.fixture
+def idle(monkeypatch):
+    """Start runs without letting any agent act."""
+    monkeypatch.setattr(queue, "run_queue_agent", lambda run_id: "Nothing to do")
 
 
-def test_whole_queue_continues_after_failure(client, monkeypatch):
-    monkeypatch.setattr(runs, "run_agent", scripted_review)
-    assert client.get("/api/queue").json()["total"] == 0
-    response = client.post("/api/queue/run")
+def start(client, cap=5):
+    response = client.post("/api/queue/run", json={"cap": cap})
     assert response.status_code == 202
-    assert response.json()["total"] == 25
-    assert "claim_ids" not in response.json()
+    return response.json()["run_id"]
+
+
+@pytest.mark.usefixtures("idle")
+def test_run_record_and_conflicts(client):
+    assert client.get("/api/queue").json() == {**queue.IDLE}
+    run_id = start(client, 2)
     progress = client.get("/api/queue").json()
-    assert progress == {
-        "running": False,
-        "total": 25,
-        "processed": 25,
-        "failed": 1,
-        "skipped": 0,
-        "current_claim_id": None,
-        "message": "Queue run complete",
-    }
-    assert client.get("/api/claims/CLM-1002").json()["status"] == "waiting_for_sign_off"
-    assert client.get("/api/claims/CLM-1002").json()["payment"] is None
-    assert client.get("/api/claims/CLM-1003").json()["status"] == "waiting"
-    claims = client.get("/api/claims").json()
-    assert sum(c["payment"] is not None for c in claims) == 23
+    assert progress["run_id"] == run_id
+    assert progress["cap"] == 2
+    assert progress["status"] == "stopped"
+    assert progress["summary"] == "Run ended without a summary"
+    assert client.post("/api/queue/run", json={"cap": 0}).status_code == 422
+    assert (
+        client.post(f"/api/queue/{run_id}/finish", json={"summary": "x"}).status_code
+        == 409
+    )
     assert (
         client.post(
-            "/api/claims/CLM-1002/payment",
-            json={
-                "thread_id": client.get("/api/claims/CLM-1002").json()["thread_id"],
-                "amount": "1250",
-            },
+            "/api/queue/missing/todos/CLM-1001", json={"state": "done", "note": ""}
         ).status_code
-        == 409
+        == 404
     )
-    store.initialize()
-    assert client.get("/api/queue").json() == progress
-    retry = queue.reserve()
-    assert retry.claim_ids == ["CLM-1003"]
 
 
-def test_no_eligible_claims_and_skipped_individual_start(client, monkeypatch):
-    monkeypatch.setattr(runs, "run_agent", scripted_review)
-    snapshot = queue.reserve()
-    thread_id = workflow.start("CLM-1001")["thread_id"]
-    runs.execute("CLM-1001", thread_id)
-    queue.execute(snapshot.claim_ids)
-    assert client.get("/api/queue").json()["skipped"] == 1
+def test_one_active_run_at_a_time(client, monkeypatch):
+    def second_run(run_id):
+        assert client.post("/api/queue/run", json={"cap": 1}).status_code == 409
+
+    monkeypatch.setattr(queue, "run_queue_agent", second_run)
+    start(client, 1)
+
+
+def test_the_cap_bounds_what_the_agent_may_take(client, monkeypatch):
+    taken = []
+
+    def greedy(run_id):
+        waiting = client.get(f"/api/queue/{run_id}/waiting").json()
+        assert waiting["remaining"] == 2
+        assert len(waiting["claims"]) == 25
+        for claim_id in ("CLM-1001", "CLM-1002", "CLM-1003"):
+            taken.append(
+                client.post(f"/api/queue/{run_id}/claims/{claim_id}/start").status_code
+            )
+        assert client.get(f"/api/queue/{run_id}/waiting").json()["remaining"] == 0
+
+    monkeypatch.setattr(queue, "run_queue_agent", greedy)
+    start(client, 2)
+    assert taken == [200, 200, 409]
+    assert client.get("/api/claims/CLM-1003").json()["status"] == "waiting"
+
+
+def test_todos_and_claim_handover(client, monkeypatch):
+    def plan_and_work(run_id):
+        items = {"items": [{"claim_id": "CLM-1001", "title": "Rome delay"}]}
+        assert client.post(f"/api/queue/{run_id}/todos", json=items).status_code == 200
+        assert (
+            client.post(
+                f"/api/queue/{run_id}/todos",
+                json={"items": [{"claim_id": "missing", "title": "x"}]},
+            ).status_code
+            == 404
+        )
+        assert (
+            client.post(
+                f"/api/queue/{run_id}/todos/CLM-1002",
+                json={"state": "done", "note": ""},
+            ).status_code
+            == 404
+        )
+        started = client.post(f"/api/queue/{run_id}/claims/CLM-1001/start").json()
+        assert client.get("/api/claims/CLM-1001").json()["running"]
+        assert (
+            client.post(f"/api/queue/{run_id}/claims/CLM-1001/start").status_code == 409
+        )
+        client.post(
+            f"/api/queue/{run_id}/claims/CLM-1001/finish",
+            json={"thread_id": started["thread_id"], "report": "CLM-1001 refer $0.00"},
+        )
+        client.post(
+            f"/api/queue/{run_id}/todos/CLM-1001",
+            json={"state": "done", "note": "CLM-1001 refer $0.00"},
+        )
+        client.post(f"/api/queue/{run_id}/finish", json={"summary": "One claim seen."})
+
+    monkeypatch.setattr(queue, "run_queue_agent", plan_and_work)
+    start(client, 1)
+    progress = client.get("/api/queue").json()
+    assert progress["status"] == "finished"
+    assert progress["summary"] == "One claim seen."
+    assert progress["todos"] == [
+        {
+            "claim_id": "CLM-1001",
+            "title": "Rome delay",
+            "state": "done",
+            "note": "CLM-1001 refer $0.00",
+        }
+    ]
+    claim = client.get("/api/claims/CLM-1001").json()
+    assert claim["status"] == "waiting"
+    assert not claim["running"]
+    assert "Run finished: CLM-1001 refer $0.00" in str(
+        client.get("/api/claims/CLM-1001/activity").json()
+    )
+
+
+def test_a_failing_agent_leaves_the_run_stopped(client, monkeypatch):
+    def failing(run_id):
+        raise RuntimeError("Do not expose this secret")
+
+    monkeypatch.setattr(queue, "run_queue_agent", failing)
+    start(client)
+    progress = client.get("/api/queue").json()
+    assert progress["status"] == "stopped"
+    assert "secret" not in progress["summary"]
+
+
+@pytest.mark.usefixtures("idle")
+def test_no_waiting_claims(client):
     with store.connect() as db:
-        db.execute("UPDATE claims SET status='decided' WHERE id='CLM-1003'")
-    assert client.post("/api/queue/run").status_code == 409
+        db.execute("UPDATE claims SET status='decided', decision='{}'")
+    assert client.post("/api/queue/run", json={"cap": 1}).status_code == 409
 
 
-def test_queue_duplicate_requests_and_progress(client, monkeypatch):
-    entered, release = Event(), Event()
-    ids = []
+def test_recovery_marks_an_interrupted_run_stopped(client, monkeypatch):
+    def interrupted(run_id):
+        client.post(
+            f"/api/queue/{run_id}/todos",
+            json={"items": [{"claim_id": "CLM-1001", "title": "Rome delay"}]},
+        )
+        client.post(
+            f"/api/queue/{run_id}/todos/CLM-1001",
+            json={"state": "in_progress", "note": ""},
+        )
+        with store.connect() as db:
+            db.execute("UPDATE runs SET status='running'")
 
-    def delayed(claim_id, thread_id):
-        ids.append(claim_id)
-        if len(ids) == 1:
-            entered.set()
-            release.wait(5)
-        scripted_review(claim_id, thread_id)
-
-    monkeypatch.setattr(runs, "run_agent", delayed)
-    with ThreadPoolExecutor() as pool:
-        pending = pool.submit(client.post, "/api/queue/run")
-        assert entered.wait(5)
-        progress = client.get("/api/queue").json()
-        assert progress["running"]
-        assert progress["processed"] == 0
-        assert progress["current_claim_id"] == "CLM-1001"
-        assert ids == ["CLM-1001"]
-        assert client.post("/api/queue/run").status_code == 409
-        release.set()
-        assert pending.result().status_code == 202
-    assert ids == [f"CLM-{i}" for i in range(1001, 1026)]
-
-
-def test_queue_interruption_preserves_progress_and_decisions(client, monkeypatch):
-    monkeypatch.setattr(runs, "run_agent", scripted_review)
-    progress = queue.reserve()
-    thread_id = workflow.start(progress.claim_ids[0])["thread_id"]
-    runs.execute(progress.claim_ids[0], thread_id)
+    monkeypatch.setattr(queue, "run_queue_agent", interrupted)
+    start(client)
     with store.connect() as db:
-        progress.processed = 1
-        progress.current_claim_id = "CLM-1002"
-        queue.save(db, progress)
+        db.execute("UPDATE runs SET status='running'")
     queue.recover()
-    current = client.get("/api/queue").json()
-    assert not current["running"]
-    assert current["processed"] == 1
-    assert "interrupted" in current["message"]
-    assert client.get("/api/claims/CLM-1001").json()["payment"]
-    assert len(queue.reserve().claim_ids) == 24
+    progress = client.get("/api/queue").json()
+    assert progress["status"] == "stopped"
+    assert "interrupted" in progress["summary"]
+    assert progress["todos"][0]["state"] == "to_do"
 
 
-def test_atomic_queue_reservation(client):
-    def start(_):
-        try:
-            return queue.reserve().total
-        except workflow.ConflictError:
-            return "conflict"
+def test_reset_needs_confirmation_and_an_idle_queue(client, monkeypatch):
+    def reset_during_run(run_id):
+        assert (
+            client.post("/api/queue/reset", json={"confirmation": "RESET"}).status_code
+            == 409
+        )
+        client.post(f"/api/queue/{run_id}/claims/CLM-1001/start")
 
-    with ThreadPoolExecutor() as pool:
-        results = list(pool.map(start, range(2)))
-    assert sorted(str(r) for r in results) == ["25", "conflict"]
-
-
-def test_reset_requires_confirmation_and_preserves_business_records(
-    client, monkeypatch
-):
-    monkeypatch.setattr(runs, "run_agent", scripted_review)
-    client.post("/api/queue/run")
-    source = client.get("/api/claims/CLM-1001").json()
-    policy = client.get(f"/api/policies/{source['policy_id']}").json()
-    assert client.post("/api/queue/reset", json={}).status_code == 422
+    monkeypatch.setattr(queue, "run_queue_agent", reset_during_run)
+    start(client, 1)
     assert (
-        client.post("/api/queue/reset", json={"confirmation": "wrong"}).status_code
+        client.post("/api/queue/reset", json={"confirmation": "reset"}).status_code
         == 422
     )
-    assert client.get("/api/claims/CLM-1001").json()["payment"]
-    result = client.post("/api/queue/reset", json={"confirmation": "RESET"})
-    assert result.status_code == 200
-    assert result.json() == {"reset_claims": 25}
-    claims = client.get("/api/claims").json()
-    assert all(
-        c["status"] == "waiting" and c["decision"] is None and c["payment"] is None
-        for c in claims
-    )
-    claim = client.get("/api/claims/CLM-1001").json()
-    assert claim["thread_id"] is None
-    assert claim["sign_off"] is None
-    assert claim["story"] == source["story"]
-    assert claim["documents"] == source["documents"]
+    assert client.post("/api/queue/reset", json={}).status_code == 422
+    assert client.get("/api/claims/CLM-1001").json()["running"]
+    with store.connect() as db:
+        db.execute("UPDATE claims SET running=0")
+    assert client.post("/api/queue/reset", json={"confirmation": "RESET"}).json() == {
+        "reset_claims": 25
+    }
+    assert client.get("/api/queue").json() == {**queue.IDLE}
     assert client.get("/api/claims/CLM-1001/activity").json() == []
-    assert client.get(f"/api/policies/{source['policy_id']}").json() == policy
-    assert client.get("/api/queue").json()["total"] == 0
-    assert queue.reserve().total == 25
-
-
-@pytest.mark.parametrize("mode", ["queue", "claim"])
-def test_reset_is_blocked_while_work_is_active(client, mode):
-    if mode == "queue":
-        queue.reserve()
-    else:
-        workflow.start("CLM-1001")
-    assert (
-        client.post("/api/queue/reset", json={"confirmation": "RESET"}).status_code
-        == 409
-    )
-    assert len(client.get("/api/claims/CLM-1001/activity").json()) == (
-        1 if mode == "claim" else 0
-    )

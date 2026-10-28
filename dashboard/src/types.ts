@@ -73,13 +73,21 @@ export interface Details {
   activity: Activity[];
 }
 
+export type TodoState = "to_do" | "in_progress" | "done" | "left_for_handler";
+export interface Todo {
+  claim_id: string;
+  title: string;
+  state: TodoState;
+  note: string | null;
+}
 export interface QueueRun {
-  running: boolean;
-  total: number;
-  processed: number;
-  failed: number;
-  skipped: number;
-  current_claim_id: string | null;
-  message: string;
+  run_id: string | null;
+  cap: number;
+  worked: number;
+  status: "idle" | "running" | "finished" | "stopped";
+  summary: string | null;
+  started_at: string | null;
+  finished_at: string | null;
+  todos: Todo[];
 }
 export type WorkspaceTab = "queue" | "finished" | "reset";

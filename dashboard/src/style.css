@@ -452,8 +452,20 @@ footer {
 .queue-runner {
   padding: 0 8px 16px;
 }
-.queue-runner > button {
-  width: 100%;
+.queue-start {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.queue-start label {
+  font-size: 11px;
+  color: var(--muted);
+}
+.queue-start input {
+  width: 56px;
+}
+.queue-start button {
+  flex: 1;
 }
 .queue-runner > p {
   margin: 10px 0 0;
@@ -472,6 +484,51 @@ footer {
 progress {
   width: 100%;
   accent-color: #06d6a0;
+}
+.todos {
+  padding: 0 8px 16px;
+}
+.todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.todo {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--soft);
+  font-size: 12px;
+}
+.todo.in_progress {
+  outline: 2px solid #f78c6b;
+}
+.todo-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+.todo-note {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.queue-summary {
+  margin: 12px 0 0;
+  font-size: 12px;
+}
+.to_do {
+  background: #e4e8ef;
+}
+.done {
+  background: #06d6a0;
+}
+.left_for_handler {
+  background: #ef476f;
+  color: #fff;
 }
 .queue-result {
   text-transform: capitalize;
@@ -515,6 +572,51 @@ progress {
   .queue nav {
     max-height: max(180px, calc(100vh - 480px));
   }
+}
+.todos {
+  padding: 0 8px 16px;
+}
+.todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.todo {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--soft);
+  font-size: 12px;
+}
+.todo.in_progress {
+  outline: 2px solid #f78c6b;
+}
+.todo-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+}
+.todo-note {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.queue-summary {
+  margin: 12px 0 0;
+  font-size: 12px;
+}
+.to_do {
+  background: #e4e8ef;
+}
+.done {
+  background: #06d6a0;
+}
+.left_for_handler {
+  background: #ef476f;
+  color: #fff;
 }
 .queue-result {
   font-family: "JetBrains Mono", monospace;

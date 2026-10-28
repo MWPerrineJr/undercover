@@ -74,6 +74,37 @@ class Payment(BaseModel):
     amount: Money
 
 
+class StartRun(BaseModel):
+    cap: Annotated[int, Field(ge=1)]
+
+
+class TodoItem(BaseModel):
+    claim_id: Text
+    title: Text
+
+
+class TodoList(BaseModel):
+    items: Annotated[list[TodoItem], Field(min_length=1)]
+
+
+class TodoUpdate(BaseModel):
+    state: Literal["to_do", "in_progress", "done", "left_for_handler"]
+    note: str
+
+
+class ClaimReport(BaseModel):
+    thread_id: Text
+    report: Text
+
+
+class RunSummary(BaseModel):
+    summary: Text
+
+
+class ResetQueue(BaseModel):
+    confirmation: Literal["RESET"]
+
+
 class Activity(BaseModel):
     thread_id: Text
     message: Annotated[str, Field(min_length=1, max_length=300)]

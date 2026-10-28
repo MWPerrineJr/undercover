@@ -1,148 +1,234 @@
-"""A single sequential run of the waiting claims queue."""
+"""The queue run: the agent plans it, the backend records and bounds it."""
 
-from typing import Literal
+from uuid import uuid4
 
 from fastapi import APIRouter, BackgroundTasks
-from pydantic import BaseModel, Field
 
+from agent.queue import run_queue as run_queue_agent
 from backend import runs, store, workflow
+from backend.models import (
+    ClaimReport,
+    ResetQueue,
+    RunSummary,
+    StartRun,
+    TodoList,
+    TodoUpdate,
+)
 
 router = APIRouter(prefix="/api/queue")
+IDLE = {
+    "run_id": None,
+    "cap": 0,
+    "worked": 0,
+    "status": "idle",
+    "summary": None,
+    "started_at": None,
+    "finished_at": None,
+    "todos": [],
+}
 
 
-class QueueRun(BaseModel):
-    running: bool = False
-    total: int = 0
-    processed: int = 0
-    failed: int = 0
-    skipped: int = 0
-    current_claim_id: str | None = None
-    message: str = "Ready to run waiting claims"
-    claim_ids: list[str] = Field(default_factory=list)
-
-
-def read(db) -> QueueRun:
-    """Read the latest queue progress, including its private snapshot."""
+def latest(db) -> dict:
+    """Read the most recent run with its to-do list."""
     row = db.execute(
-        "SELECT body FROM records WHERE kind='queue' AND id='latest'"
+        "SELECT * FROM runs ORDER BY started_at DESC, rowid DESC"
     ).fetchone()
-    return QueueRun.model_validate_json(row["body"]) if row else QueueRun()
-
-
-def save(db, progress: QueueRun):
-    """Persist queue progress without changing any claim."""
-    db.execute(
-        "INSERT INTO records VALUES ('queue', 'latest', ?) "
-        "ON CONFLICT(kind, id) DO UPDATE SET body=excluded.body",
-        (progress.model_dump_json(),),
+    if row is None:
+        return dict(IDLE)
+    todos = db.execute(
+        "SELECT claim_id, title, state, note FROM todos WHERE run_id=? "
+        "ORDER BY position",
+        (row["id"],),
     )
+    return {
+        "run_id": row["id"],
+        "cap": row["cap"],
+        "worked": row["worked"],
+        "status": row["status"],
+        "summary": row["summary"],
+        "started_at": row["started_at"],
+        "finished_at": row["finished_at"],
+        "todos": [dict(todo) for todo in todos],
+    }
 
 
-def reserve() -> QueueRun:
-    """Atomically snapshot waiting claims for one batch."""
-    with store.connect() as db:
-        db.execute("BEGIN IMMEDIATE")
-        if read(db).running:
-            raise workflow.ConflictError("A queue run is already active")
-        ids = [
-            row["id"]
-            for row in db.execute(
-                "SELECT id FROM claims WHERE status='waiting' AND decision IS NULL "
-                "AND running=0 ORDER BY id"
+def active(db, run_id: str) -> dict:
+    """Lock and read a run that is still going."""
+    db.execute("BEGIN IMMEDIATE")
+    row = db.execute("SELECT * FROM runs WHERE id=?", (run_id,)).fetchone()
+    if row is None:
+        raise LookupError("Run not found")
+    if row["status"] != "running":
+        raise workflow.ConflictError("This run has finished")
+    return dict(row)
+
+
+def waiting_claims(db) -> list[dict]:
+    """List the claims still waiting for a decision."""
+    rows = db.execute(
+        "SELECT id FROM claims WHERE status='waiting' AND decision IS NULL "
+        "AND running=0 ORDER BY id"
+    ).fetchall()
+    claims = [store.claim_record(db, row["id"]) for row in rows]
+    return [
+        {
+            field: claim[field]
+            for field in (
+                "claim_id",
+                "claim_type",
+                "summary",
+                "submitted_on",
+                "amount_claimed",
             )
-        ]
-        if not ids:
-            raise workflow.ConflictError("No waiting claims to run")
-        progress = QueueRun(
-            running=True,
-            total=len(ids),
-            claim_ids=ids,
-            message="Reviewing waiting claims",
-        )
-        save(db, progress)
-        return progress
+        }
+        for claim in claims
+    ]
 
 
-def attempt(claim_id: str) -> str:
-    """Attempt a snapshot claim once, skipping work already taken by a handler."""
+def execute(run_id: str):
+    """Run the queue agent away from the request and leave the run closed."""
     try:
-        thread_id = workflow.start(claim_id)["thread_id"]
-    except workflow.ConflictError:
-        return "skipped"
-    return "reviewed" if runs.execute(claim_id, thread_id) else "failed"
-
-
-def execute(claim_ids: list[str]):
-    """Review the snapshot sequentially and retain progress after every claim."""
-    for claim_id in claim_ids:
-        with store.connect() as db:
-            progress = read(db)
-            progress.current_claim_id = claim_id
-            save(db, progress)
-        outcome = attempt(claim_id)
-        with store.connect() as db:
-            progress = read(db)
-            progress.processed += 1
-            progress.failed += int(outcome == "failed")
-            progress.skipped += int(outcome == "skipped")
-            progress.current_claim_id = None
-            save(db, progress)
+        run_queue_agent(run_id)
+        ending = "Run ended without a summary"
+    except Exception:
+        ending = "Run stopped: check the backend and model configuration"
     with store.connect() as db:
-        progress = read(db)
-        progress.running = False
-        progress.message = "Queue run complete"
-        save(db, progress)
+        db.execute(
+            "UPDATE runs SET status='stopped', summary=?, "
+            "finished_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') "
+            "WHERE id=? AND status='running'",
+            (ending, run_id),
+        )
 
 
 def recover():
-    """Mark an interrupted queue stopped without restarting model calls."""
+    """Mark an interrupted run stopped without restarting model calls."""
     with store.connect() as db:
-        progress = read(db)
-        if progress.running:
-            progress.running = False
-            progress.current_claim_id = None
-            progress.message = (
-                "Queue run interrupted; run remaining waiting claims to continue"
-            )
-            save(db, progress)
+        db.execute(
+            "UPDATE runs SET status='stopped', summary=?, "
+            "finished_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE status='running'",
+            ("Queue run interrupted by a restart; start another run to continue",),
+        )
+        db.execute("UPDATE todos SET state='to_do' WHERE state='in_progress'")
 
 
 @router.get("", operation_id="get_queue_run")
 def get_queue_run() -> dict:
-    """Read the latest queue run's progress."""
+    """Read the current or most recent run with its to-do list."""
     with store.connect() as db:
-        return read(db).model_dump(exclude={"claim_ids"})
+        return latest(db)
 
 
 @router.post("/run", status_code=202, operation_id="run_queue")
-def run_queue(background_tasks: BackgroundTasks) -> dict:
-    """Start one sequential review of all currently waiting claims."""
-    progress = reserve()
-    background_tasks.add_task(execute, progress.claim_ids)
-    return progress.model_dump(exclude={"claim_ids"})
+def run_queue(request: StartRun, background_tasks: BackgroundTasks) -> dict:
+    """Start one agent-organized run over the waiting claims."""
+    run_id = str(uuid4())
+    with store.connect() as db:
+        db.execute("BEGIN IMMEDIATE")
+        if latest(db)["status"] == "running":
+            raise workflow.ConflictError("A queue run is already active")
+        if not waiting_claims(db):
+            raise workflow.ConflictError("No waiting claims to run")
+        db.execute("INSERT INTO runs (id, cap) VALUES (?, ?)", (run_id, request.cap))
+        progress = latest(db)
+    background_tasks.add_task(execute, run_id)
+    return progress
 
 
-class ResetQueue(BaseModel):
-    confirmation: Literal["RESET"]
+@router.get("/{run_id}/waiting", operation_id="list_waiting_claims")
+def list_waiting(run_id: str) -> dict:
+    """List the waiting claims and how many this run may still work."""
+    with store.connect() as db:
+        run = active(db, run_id)
+        return {
+            "remaining": run["cap"] - run["worked"],
+            "claims": waiting_claims(db),
+        }
+
+
+@router.post("/{run_id}/todos", operation_id="set_todo_list")
+def set_todo_list(run_id: str, request: TodoList) -> dict:
+    """Replace the run's to-do list with the agent's plan."""
+    with store.connect() as db:
+        active(db, run_id)
+        for item in request.items:
+            store.claim_record(db, item.claim_id)
+        db.execute("DELETE FROM todos WHERE run_id=?", (run_id,))
+        db.executemany(
+            "INSERT INTO todos (run_id, claim_id, position, title) VALUES (?, ?, ?, ?)",
+            [
+                (run_id, item.claim_id, position, item.title)
+                for position, item in enumerate(request.items)
+            ],
+        )
+        return latest(db)
+
+
+@router.post("/{run_id}/todos/{claim_id}", operation_id="update_todo")
+def update_todo(run_id: str, claim_id: str, request: TodoUpdate) -> dict:
+    """Move one to-do item on and record what happened."""
+    with store.connect() as db:
+        active(db, run_id)
+        changed = db.execute(
+            "UPDATE todos SET state=?, note=? WHERE run_id=? AND claim_id=?",
+            (request.state, request.note, run_id, claim_id),
+        ).rowcount
+        if not changed:
+            raise LookupError("To-do item not found")
+        return latest(db)
+
+
+@router.post("/{run_id}/claims/{claim_id}/start", operation_id="start_queue_claim")
+def start_queue_claim(run_id: str, claim_id: str) -> dict:
+    """Take one claim for this run, inside its cap."""
+    with store.connect() as db:
+        run = active(db, run_id)
+        if run["worked"] >= run["cap"]:
+            raise workflow.ConflictError("This run has reached its cap")
+        thread_id = workflow.reserve(db, claim_id)
+        db.execute("UPDATE runs SET worked=worked+1 WHERE id=?", (run_id,))
+        return {"thread_id": thread_id}
+
+
+@router.post("/{run_id}/claims/{claim_id}/finish", operation_id="finish_queue_claim")
+def finish_queue_claim(run_id: str, claim_id: str, request: ClaimReport) -> dict:
+    """Release one claim and record what the claim agent reported."""
+    with store.connect() as db:
+        active(db, run_id)
+    runs.finish(claim_id, request.thread_id, f"Run finished: {request.report}")
+    with store.connect() as db:
+        return store.claim_record(db, claim_id)
+
+
+@router.post("/{run_id}/finish", operation_id="finish_run")
+def finish_run(run_id: str, request: RunSummary) -> dict:
+    """Close the run with a summary for the handlers."""
+    with store.connect() as db:
+        active(db, run_id)
+        db.execute(
+            "UPDATE runs SET status='finished', summary=?, "
+            "finished_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id=?",
+            (request.summary, run_id),
+        )
+        return latest(db)
 
 
 @router.post("/reset", operation_id="reset_queue")
 def reset_queue(request: ResetQueue) -> dict:
-    """Clear claim workflow and queue progress when no agent is working."""
+    """Clear claim workflow and run history when no agent is working."""
     with store.connect() as db:
         db.execute("BEGIN IMMEDIATE")
-        active_claim = db.execute(
-            "SELECT id FROM claims WHERE running=1 LIMIT 1"
-        ).fetchone()
-        if read(db).running or active_claim:
+        working = db.execute("SELECT id FROM claims WHERE running=1 LIMIT 1").fetchone()
+        if latest(db)["status"] == "running" or working:
             raise workflow.ConflictError(
                 "Wait for all agent runs to finish before resetting"
             )
         db.execute("DELETE FROM activity")
+        db.execute("DELETE FROM todos")
+        db.execute("DELETE FROM runs")
         db.execute(
             "UPDATE claims SET status='waiting', running=0, thread_id=NULL, "
             "decision=NULL, sign_off=NULL, payment=NULL"
         )
-        db.execute("DELETE FROM records WHERE kind='queue' AND id='latest'")
         total = db.execute("SELECT count(*) FROM claims").fetchone()[0]
     return {"reset_claims": total}

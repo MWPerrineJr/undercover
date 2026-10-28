@@ -5,6 +5,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import { App } from "./App";
@@ -73,12 +74,15 @@ it("shows the empty finished tab and supports arrow, home and end navigation", a
   ).toBeDefined();
 });
 
-it("retries a queue-start error, polls progress and stops once all attempts finish", async () => {
+it("retries a queue-start error, shows the to-do list and stops polling at the end", async () => {
   const { claim, progress, fetcher } = mockBackend();
   render(<App />);
   const run = await screen.findByRole("button", { name: "Run queue" });
   await waitFor(() => {
     expect(run).toHaveProperty("disabled", false);
+  });
+  fireEvent.change(screen.getByLabelText("Claims in this run"), {
+    target: { value: "2" },
   });
   fetcher.mockResolvedValueOnce(new Response("{}", { status: 409 }));
   fireEvent.click(run);
@@ -87,22 +91,48 @@ it("retries a queue-start error, polls progress and stops once all attempts fini
   expect(
     await screen.findByRole("button", { name: "Queue running" }),
   ).toHaveProperty("disabled", true);
-  expect(screen.getByText(/0 of 2 attempted/)).toBeDefined();
+  expect(
+    fetcher.mock.calls.some(
+      ([path, init]) =>
+        path === "/api/queue/run" && init?.body === JSON.stringify({ cap: 2 }),
+    ),
+  ).toBe(true);
+  const todos = screen.getByRole("region", {
+    name: "The agent's to-do list",
+  });
+  expect(await within(todos).findByText("Rome flight canceled")).toBeDefined();
+  expect(within(todos).getByText("in progress")).toBeDefined();
+  expect(screen.getByText(/0 of 2 done/)).toBeDefined();
   Object.assign(progress, {
-    running: false,
-    processed: 2,
-    failed: 1,
-    skipped: 1,
-    current_claim_id: null,
-    message: "Queue run complete",
+    status: "finished",
+    summary: "Worked 2 claims: one approved, one referred.",
+    worked: 2,
+    todos: [
+      {
+        claim_id: "CLM-1001",
+        title: "Rome flight canceled",
+        state: "done",
+        note: "CLM-1001 approve $420.00 paid",
+      },
+      {
+        claim_id: "CLM-1002",
+        title: "Lost baggage in Lisbon",
+        state: "left_for_handler",
+        note: "Failed twice",
+      },
+    ],
   });
   claim.running = false;
   expect(
-    await screen.findByText("Queue run complete", {}, { timeout: 2500 }),
+    await screen.findByText(
+      "Worked 2 claims: one approved, one referred.",
+      {},
+      { timeout: 2500 },
+    ),
   ).toBeDefined();
-  expect(
-    screen.getByText(/2 of 2 attempted · 1 failed · 1 skipped/),
-  ).toBeDefined();
+  expect(screen.getByText("CLM-1001 approve $420.00 paid")).toBeDefined();
+  expect(screen.getByText("left for a handler")).toBeDefined();
+  expect(screen.getByText(/1 of 2 done · 1 left for a handler/)).toBeDefined();
   const calls = fetcher.mock.calls.length;
   await act(async () => {
     await new Promise((resolve) => {
@@ -112,14 +142,31 @@ it("retries a queue-start error, polls progress and stops once all attempts fini
   expect(fetcher.mock.calls).toHaveLength(calls);
 });
 
-it("loads persisted active queue progress even between individual claims", async () => {
+it("loads a run that is already under way", async () => {
   const { progress } = mockBackend();
-  Object.assign(progress, { running: true, total: 2, processed: 1 });
+  Object.assign(progress, {
+    run_id: "run-1",
+    cap: 2,
+    worked: 1,
+    status: "running",
+    todos: [
+      {
+        claim_id: "CLM-1001",
+        title: "Rome flight canceled",
+        state: "in_progress",
+        note: null,
+      },
+    ],
+  });
   render(<App />);
   expect(
     await screen.findByRole("button", { name: "Queue running" }),
   ).toHaveProperty("disabled", true);
-  expect(screen.getByText(/1 of 2 attempted/)).toBeDefined();
+  expect(screen.getByLabelText("Claims in this run")).toHaveProperty(
+    "disabled",
+    true,
+  );
+  expect(screen.getByText("Rome flight canceled")).toBeDefined();
   fireEvent.click(screen.getByRole("tab", { name: "Reset" }));
   expect(
     await screen.findByRole("button", { name: "Reset all claims" }),

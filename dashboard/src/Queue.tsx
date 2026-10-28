@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { api } from "./api";
 import { label, money } from "./format";
+import { TodoList } from "./TodoList";
 import type { QueueRun, Summary } from "./types";
 
 function QueueRunner({
@@ -12,13 +13,20 @@ function QueueRunner({
   waiting: number;
   refresh: () => void;
 }>) {
+  const [cap, setCap] = useState("5");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const running = progress?.status === "running";
+  const done =
+    progress?.todos.filter((todo) => todo.state === "done").length ?? 0;
+  const left =
+    progress?.todos.filter((todo) => todo.state === "left_for_handler")
+      .length ?? 0;
   async function start() {
     setBusy(true);
     setError("");
     try {
-      await api("/queue/run", undefined, {});
+      await api("/queue/run", undefined, { cap: Number(cap) });
     } catch (cause) {
       setError(
         cause instanceof Error ? cause.message : "Unable to run the queue.",
@@ -30,32 +38,44 @@ function QueueRunner({
   }
   return (
     <div className="queue-runner">
-      <button
-        disabled={busy || !progress || progress.running || waiting === 0}
-        onClick={() => {
-          void start();
-        }}
-      >
-        {progress?.running ? "Queue running" : "Run queue"}
-      </button>
+      <div className="queue-start">
+        <label htmlFor="cap">Claims in this run</label>
+        <input
+          id="cap"
+          type="number"
+          min={1}
+          value={cap}
+          disabled={running}
+          onChange={(event) => {
+            setCap(event.target.value);
+          }}
+        />
+        <button
+          disabled={
+            busy || !progress || running || waiting === 0 || !Number(cap)
+          }
+          onClick={() => {
+            void start();
+          }}
+        >
+          {running ? "Queue running" : "Run queue"}
+        </button>
+      </div>
       <p className="muted">
-        {waiting} waiting · Runs one claim at a time using OpenRouter.
+        {waiting} waiting · The agent plans the run and gives each claim to a
+        fresh agent.
       </p>
-      {progress && progress.total > 0 && (
+      {progress?.run_id && (
         <div className="queue-progress" role="status">
-          <p>{progress.message}</p>
+          <p>{label(progress.status)}</p>
           <progress
-            value={progress.processed}
-            max={progress.total}
+            value={done + left}
+            max={Math.max(progress.todos.length, progress.cap)}
             aria-label="Queue progress"
           />
           <p>
-            {progress.processed} of {progress.total} attempted ·{" "}
-            {progress.failed} failed · {progress.skipped} skipped
+            {done} of {progress.cap} done · {left} left for a handler
           </p>
-          {progress.current_claim_id && (
-            <p>Reviewing {progress.current_claim_id}</p>
-          )}
         </div>
       )}
       {error && <p role="alert">{error}</p>}
@@ -92,7 +112,16 @@ export function Queue({
         <h2>{finished ? "Finished claims" : "Claims queue"}</h2>
         <span className="queue-count">{visible?.length ?? "—"}</span>
       </div>
-      <QueueRunner progress={progress} waiting={waiting} refresh={refresh} />
+      {!finished && (
+        <>
+          <QueueRunner
+            progress={progress}
+            waiting={waiting}
+            refresh={refresh}
+          />
+          <TodoList progress={progress} />
+        </>
+      )}
       {error && (
         <p role="alert">
           {error} <button onClick={refresh}>Retry</button>

@@ -24,6 +24,22 @@ CREATE TABLE IF NOT EXISTS claims (
     CHECK(payment IS NULL OR decision IS NOT NULL),
     CHECK(sign_off IS NULL OR decision IS NOT NULL)
 );
+CREATE TABLE IF NOT EXISTS runs (
+    id TEXT PRIMARY KEY, cap INTEGER NOT NULL, worked INTEGER NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'running'
+        CHECK(status IN ('running','finished','stopped')),
+    summary TEXT,
+    started_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    finished_at TEXT
+);
+CREATE TABLE IF NOT EXISTS todos (
+    run_id TEXT NOT NULL REFERENCES runs(id),
+    claim_id TEXT NOT NULL REFERENCES claims(id),
+    position INTEGER NOT NULL, title TEXT NOT NULL, note TEXT,
+    state TEXT NOT NULL DEFAULT 'to_do'
+        CHECK(state IN ('to_do','in_progress','done','left_for_handler')),
+    PRIMARY KEY (run_id, claim_id)
+);
 CREATE TABLE IF NOT EXISTS activity (
     id INTEGER PRIMARY KEY, claim_id TEXT NOT NULL REFERENCES claims(id),
     thread_id TEXT NOT NULL, message TEXT NOT NULL,

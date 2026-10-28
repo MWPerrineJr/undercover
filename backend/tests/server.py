@@ -7,8 +7,9 @@ from tempfile import TemporaryDirectory
 import uvicorn
 
 from agent.main import run
-from agent.tests.stubs import scripted
-from backend import runs
+from agent.queue import run_queue
+from agent.tests.stubs import queue_script, scripted
+from backend import queue, runs, store
 from backend.main import app
 
 ATTEMPTS: dict[str, int] = {}
@@ -28,12 +29,21 @@ def scripted_run(claim_id: str, thread_id: str):
     return run(claim_id, thread_id, scripted(outcome, amount, outcome == "approve"))
 
 
+def scripted_queue(run_id: str):
+    """Plan and work the run with scripted models instead of a remote one."""
+    with store.connect() as db:
+        cap = db.execute("SELECT cap FROM runs WHERE id=?", (run_id,)).fetchone()["cap"]
+        claim_ids = [claim["claim_id"] for claim in queue.waiting_claims(db)][:cap]
+    return run_queue(run_id, queue_script(claim_ids), scripted_run)
+
+
 def main():
     """Serve an ephemeral database on the dedicated browser-test port."""
     with TemporaryDirectory(prefix="undercover-e2e-") as directory:
         os.environ["UNDERCOVER_DB"] = f"{directory}/test.sqlite3"
         os.environ["BACKEND_URL"] = "http://127.0.0.1:8010"
         runs.run_agent = scripted_run
+        queue.run_queue_agent = scripted_queue
         uvicorn.run(app, host="127.0.0.1", port=8010)
 
 

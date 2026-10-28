@@ -18,7 +18,8 @@ export function useWorkspace() {
   const { data, error } = useResource(loadWorkspace, revision);
   const running =
     data !== null &&
-    (data.progress.running || data.claims.some((claim) => claim.running));
+    (data.progress.status === "running" ||
+      data.claims.some((claim) => claim.running));
   const claims = data?.claims ?? null;
   const progress = data?.progress ?? null;
   const total = claims?.length ?? 0;

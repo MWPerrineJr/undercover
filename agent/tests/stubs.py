@@ -48,3 +48,42 @@ def scripted(outcome="approve", amount="420.00", attempt_payment=True):
     ]
     replies.append(AIMessage(content="Claim processing complete."))
     return StubModel(messages=iter(replies))
+
+
+def queue_script(claim_ids, cap_note="worked"):
+    """Script a queue agent that plans, works each claim and closes the run."""
+    calls = [("list_waiting_claims", {})]
+    calls.append(
+        (
+            "set_todo_list",
+            {
+                "items": [
+                    {"claim_id": claim_id, "title": f"Work {claim_id}"}
+                    for claim_id in claim_ids
+                ]
+            },
+        )
+    )
+    for claim_id in claim_ids:
+        calls.append(
+            ("update_todo", {"claim_id": claim_id, "state": "in_progress", "note": ""})
+        )
+        calls.append(("work_one_claim", {"claim_id": claim_id}))
+        calls.append(
+            (
+                "update_todo",
+                {
+                    "claim_id": claim_id,
+                    "state": "done",
+                    "note": f"{claim_id} {cap_note}",
+                },
+            )
+        )
+    calls.append(("list_waiting_claims", {}))
+    calls.append(("finish_run", {"summary": f"Worked {len(claim_ids)} claims."}))
+    replies = [
+        AIMessage(content="", tool_calls=[{"name": name, "args": args, "id": str(i)}])
+        for i, (name, args) in enumerate(calls)
+    ]
+    replies.append(AIMessage(content="Queue run complete."))
+    return StubModel(messages=iter(replies))

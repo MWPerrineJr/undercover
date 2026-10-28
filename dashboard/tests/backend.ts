@@ -38,13 +38,14 @@ export const approved: Partial<Claim> = {
   },
 };
 const idle: QueueRun = {
-  running: false,
-  total: 0,
-  processed: 0,
-  failed: 0,
-  skipped: 0,
-  current_claim_id: null,
-  message: "Ready to run waiting claims",
+  run_id: null,
+  cap: 0,
+  worked: 0,
+  status: "idle",
+  summary: null,
+  started_at: null,
+  finished_at: null,
+  todos: [],
 };
 
 export function mockBackend(initial: Partial<Claim> = {}) {
@@ -59,10 +60,24 @@ export function mockBackend(initial: Partial<Claim> = {}) {
   function mutate(path: string) {
     if (path === "/queue/run") {
       Object.assign(progress, {
-        running: true,
-        total: 2,
-        current_claim_id: claim.claim_id,
-        message: "Reviewing waiting claims",
+        run_id: "run-1",
+        cap: 2,
+        worked: 1,
+        status: "running",
+        todos: [
+          {
+            claim_id: "CLM-1001",
+            title: "Rome flight canceled",
+            state: "in_progress",
+            note: null,
+          },
+          {
+            claim_id: "CLM-1002",
+            title: "Lost baggage in Lisbon",
+            state: "to_do",
+            note: null,
+          },
+        ],
       });
       claim.running = true;
       claim.status = "in_progress";
@@ -74,7 +89,7 @@ export function mockBackend(initial: Partial<Claim> = {}) {
         claim_id: "CLM-1002",
         summary: "Lost baggage",
       });
-      Object.assign(progress, idle);
+      Object.assign(progress, idle, { todos: [] });
       return Response.json({ reset_claims: 2 });
     }
     if (path.startsWith("/claims/") && path.endsWith("/run")) {
