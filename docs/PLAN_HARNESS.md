@@ -10,9 +10,9 @@ Build on the existing pilot: FastAPI and SQLite in `backend/`, LangChain `create
 
 The pilot is on branch `week1day3-mwp` ("completed pilot project"); `main` currently holds the hello-world skeleton plus the lab notebooks and `docs/HARNESS.md`. Before Phase 1, bring the pilot onto `main`:
 
-- [ ] Commit any outstanding notebook work, then `git merge week1day3-mwp` into `main`, keeping `main`'s `labs/`, `MyWork/` and lock files where they conflict.
-- [ ] `docs/PLAN.md` (the pilot's finished plan) and `docs/QUEUE.md` arrive with the merge and stay as they are until Phase 6.
-- [ ] `npm run check` is green on `main` before any harness work starts.
+- [x] Commit any outstanding notebook work, then `git merge week1day3-mwp` into `main`, keeping `main`'s `labs/`, `MyWork/` and lock files where they conflict.
+- [x] `docs/PLAN.md` (the pilot's finished plan) and `docs/QUEUE.md` arrive with the merge and stay as they are until Phase 6.
+- [x] `npm run check` is green on `main` before any harness work starts.
 
 ## Design decisions
 

@@ -35,7 +35,7 @@ it("requires exact confirmation, resets only on click and refreshes the queue", 
   expect(
     await screen.findByText("2 claims returned to waiting."),
   ).toBeDefined();
-  fireEvent.click(screen.getByRole("tab", { name: "Queue (2)" }));
+  fireEvent.click(await screen.findByRole("tab", { name: "Queue (2)" }));
   expect(
     await screen.findByRole("button", { name: "Run agent" }),
   ).toBeDefined();
