@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from backend import queue
+from backend import documents, queue
 from backend.routes import router
 from backend.runs import recover
 from backend.runs import router as run_router
@@ -44,5 +44,6 @@ async def conflict(_request: Request, exception: ConflictError):
 
 
 app.include_router(router)
+app.include_router(documents.router)
 app.include_router(run_router)
 app.include_router(queue.router)

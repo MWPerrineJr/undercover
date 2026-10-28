@@ -5,19 +5,28 @@ import { Queue } from "./Queue";
 import { ResetDashboard } from "./ResetDashboard";
 import { WorkspaceTabs } from "./WorkspaceTabs";
 import { useWorkspace } from "./workspace";
-import type { WorkspaceTab } from "./types";
+import type { Instructions as InstructionText, WorkspaceTab } from "./types";
 import "./style.css";
 
 const loadInstructions = (signal: AbortSignal) =>
-  api<{ text: string }>("/instructions", signal);
+  api<InstructionText[]>("/instructions", signal);
 function Instructions({ revision }: Readonly<{ revision: number }>) {
   const { data, error } = useResource(loadInstructions, revision);
   return (
     <section className="panel instructions">
       <p className="eyebrow">Read only</p>
       <h1>Agent instructions</h1>
-      <p>The instructions used by the UnderCover Agent for every claim.</p>
-      <pre>{data?.text ?? (error || "Loading instructions…")}</pre>
+      <p>The instructions the UnderCover Agent works to.</p>
+      {data ? (
+        data.map((instructions) => (
+          <div key={instructions.name}>
+            <h2>{instructions.title}</h2>
+            <pre>{instructions.text}</pre>
+          </div>
+        ))
+      ) : (
+        <pre>{error || "Loading instructions…"}</pre>
+      )}
     </section>
   );
 }

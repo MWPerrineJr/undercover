@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
@@ -26,9 +27,14 @@ CREATE TABLE IF NOT EXISTS claims (
 CREATE TABLE IF NOT EXISTS activity (
     id INTEGER PRIMARY KEY, claim_id TEXT NOT NULL REFERENCES claims(id),
     thread_id TEXT NOT NULL, message TEXT NOT NULL,
+    kind TEXT NOT NULL DEFAULT 'step' CHECK(kind IN ('step','read')),
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
 """
+DOCUMENTS = (
+    ("wording", "policy_wording.md", "2026.1"),
+    ("manual", "claims_manual.md", "2026.2"),
+)
 
 
 @contextmanager
@@ -54,6 +60,11 @@ def initialize():
             db.execute(
                 "ALTER TABLE claims ADD COLUMN running INTEGER NOT NULL DEFAULT 0"
             )
+        events = {row["name"] for row in db.execute("PRAGMA table_info(activity)")}
+        if "kind" not in events:
+            db.execute(
+                "ALTER TABLE activity ADD COLUMN kind TEXT NOT NULL DEFAULT 'step'"
+            )
         for kind, model in (
             ("customers", Customer),
             ("policies", Policy),
@@ -71,25 +82,38 @@ def initialize():
             db.execute(
                 "INSERT OR IGNORE INTO records VALUES (?, ?, ?)", (name, name, body)
             )
-        db.execute(
-            "INSERT OR IGNORE INTO records VALUES (?, ?, ?)",
-            (
-                "wording",
-                "wording",
-                json.dumps(
-                    {
-                        "text": (DATA / "policy_wording.md").read_text(),
-                        "version": "2026.1",
-                    }
+        for kind, filename, version in DOCUMENTS:
+            db.execute(
+                "INSERT OR IGNORE INTO records VALUES (?, ?, ?)",
+                (
+                    kind,
+                    kind,
+                    json.dumps(
+                        {"text": (DATA / filename).read_text(), "version": version}
+                    ),
                 ),
-            ),
-        )
+            )
         for raw in json.loads((DATA / "claims.json").read_text()):
             claim = Claim.model_validate(raw)
             db.execute(
                 "INSERT OR IGNORE INTO claims (id, body) VALUES (?, ?)",
                 (claim.claim_id, claim.model_dump_json()),
             )
+
+
+def sections(text: str) -> list[dict]:
+    """Split a document on its numbered `## N. Title` headings."""
+    parts = re.split(r"^## (\d+)\. (.+)$", text, flags=re.MULTILINE)
+    return [
+        {
+            "number": int(number),
+            "title": title,
+            "text": f"## {number}. {title}\n\n{body.strip()}",
+        }
+        for number, title, body in zip(
+            parts[1::3], parts[2::3], parts[3::3], strict=True
+        )
+    ]
 
 
 def record(db, kind: str, key: str) -> dict:
@@ -120,9 +144,9 @@ def claim_record(db, claim_id: str) -> dict:
     return result
 
 
-def event(db, claim_id: str, thread_id: str, message: str):
-    """Append a timestamped operational event."""
+def event(db, claim_id: str, thread_id: str, message: str, kind: str = "step"):
+    """Append a timestamped step or document read."""
     db.execute(
-        "INSERT INTO activity (claim_id, thread_id, message) VALUES (?, ?, ?)",
-        (claim_id, thread_id, message),
+        "INSERT INTO activity (claim_id, thread_id, message, kind) VALUES (?, ?, ?, ?)",
+        (claim_id, thread_id, message, kind),
     )

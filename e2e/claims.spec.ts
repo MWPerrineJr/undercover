@@ -26,11 +26,16 @@ test("shows the seeded queue, complete evidence and the exact read-only instruct
     "## 10. How we work out your payment",
   );
   const response = await request.get("/api/instructions");
-  const instructions = (await response.json()) as { text: string };
+  const instructions = (await response.json()) as {
+    title: string;
+    text: string;
+  }[];
   await page
     .getByRole("button", { name: "Agent instructions", exact: true })
     .click();
-  await expect(page.locator(".instructions pre")).toHaveText(instructions.text);
+  await expect(page.locator(".instructions pre")).toHaveText(
+    instructions.map((text) => text.text),
+  );
   await expect(page.getByRole("textbox")).toHaveCount(0);
 });
 

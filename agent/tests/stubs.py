@@ -14,14 +14,12 @@ class StubModel(GenericFakeChatModel):
 def scripted(outcome="approve", amount="420.00", attempt_payment=True):
     calls = [
         (name, {})
-        for name in (
-            "read_claim",
-            "read_policy",
-            "read_customer",
-            "read_plans",
-            "read_wording",
-        )
+        for name in ("read_claim", "read_policy", "read_customer", "read_plans")
     ]
+    calls.append(("list_documents", {}))
+    calls.append(("search_documents", {"query": "baggage delay"}))
+    calls.append(("read_section", {"document": "policy_wording", "number": 3}))
+    calls.append(("read_section", {"document": "claims_manual", "number": 9}))
     calls.append(
         (
             "record_decision",
@@ -31,6 +29,7 @@ def scripted(outcome="approve", amount="420.00", attempt_payment=True):
                 "calculation": f"Synthetic fixture: eligible USD {amount}; no offsets.",
                 "explanation": "Synthetic decision. See section 3.",
                 "policy_sections": [3, 10],
+                "manual_sections": [9],
             },
         )
     )

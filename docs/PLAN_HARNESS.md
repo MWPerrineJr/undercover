@@ -35,14 +35,14 @@ Agent: replace `read_wording` with `list_documents`, `search_documents` and `rea
 
 Success criteria:
 
-- [ ] `GET /api/documents` lists `policy_wording` with 12 sections and `claims_manual` with 14, and every number and title matches the `## N.` headings in `data/`.
-- [ ] `GET /api/documents/claims_manual/sections/9` returns section 9, "Repeat claims", and nothing from sections 8 or 10; section 99 returns `404`.
-- [ ] `GET /api/documents/search?q=wild%20animal` returns manual section 7, and `?q=meals` returns manual section 10.
-- [ ] Seed tests still prove only the allowlisted files are opened, now including `claims_manual.md` and still excluding `data/evals/` and `data/security/`.
-- [ ] A stub-model claim run records `read` activity rows naming the sections, and the agent's tool list no longer contains `read_wording`.
-- [ ] A decision citing manual section 9 and wording section 5 round-trips through `POST /api/claims/{id}/decision` and back out of `GET /api/claims/{id}`.
-- [ ] `docs/SPEC.md` no longer lists the claims manual under "Not for now" and says the agent looks it up section by section.
-- [ ] `npm run check:python` is green.
+- [x] `GET /api/documents` lists `policy_wording` with 12 sections and `claims_manual` with 14, and every number and title matches the `## N.` headings in `data/`.
+- [x] `GET /api/documents/claims_manual/sections/9` returns section 9, "Repeat claims", and nothing from sections 8 or 10; section 99 returns `404`.
+- [x] `GET /api/documents/search?q=wild%20animal` returns manual section 7, and `?q=meals` returns manual section 10.
+- [x] Seed tests still prove only the allowlisted files are opened, now including `claims_manual.md` and still excluding `data/evals/` and `data/security/`.
+- [x] A stub-model claim run records `read` activity rows naming the sections, and the agent's tool list no longer contains `read_wording`.
+- [x] A decision citing manual section 9 and wording section 5 round-trips through `POST /api/claims/{id}/decision` and back out of `GET /api/claims/{id}`.
+- [x] `docs/SPEC.md` no longer lists the claims manual under "Not for now" and says the agent looks it up section by section.
+- [x] `npm run check:python` is green.
 
 ## Phase 2: A fresh claim agent for each claim
 

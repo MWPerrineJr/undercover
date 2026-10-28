@@ -9,6 +9,7 @@ export interface Decision {
   calculation: string;
   explanation: string;
   policy_sections: number[];
+  manual_sections: number[];
 }
 export interface Summary {
   claim_id: string;
@@ -50,7 +51,13 @@ export interface Activity {
   id: number;
   thread_id: string;
   message: string;
+  kind: "step" | "read";
   created_at: string;
+}
+export interface Instructions {
+  name: string;
+  title: string;
+  text: string;
 }
 export interface Details {
   claim: Claim;

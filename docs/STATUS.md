@@ -5,12 +5,13 @@ The pilot is complete. All six phases in `docs/PLAN.md` were committed separatel
 ## What is built
 
 - FastAPI and SQLite with the 25 queue claims, full documents/items, policies, plans, customers/history and handlers. Startup seeds missing records without replacing saved work.
-- The UnderCover Agent uses LangChain `create_agent` on OpenRouter. It reads instructions and business records only through HTTP tools and saves approve, decline or refer, a payout calculation, explanation and numbered policy citations.
+- The UnderCover Agent uses LangChain `create_agent` on OpenRouter. It reads instructions and business records only through HTTP tools and saves approve, decline or refer, a payout calculation, explanation and numbered citations.
+- The agent looks the documents up rather than being handed them. `GET /api/documents` lists the 12 sections of the policy wording and the 14 sections of the claims manual, `GET /api/documents/search?q=` finds the sections that mention given words, and `GET /api/documents/{document}/sections/{number}` reads one section. Each read is recorded on the claim as activity of kind `read`.
 - React/Vite dashboard with the queue, complete claim evidence, policy/plan and customer history, decisions, read-only instructions and live operational activity. Desktop/mobile layouts support light and dark modes.
 - Separate decision, handler sign-off and simulated payment operations. Exactly $1,000 can be paid without sign-off; above $1,000 the backend blocks payment until a valid handler signs off. Payment must match the immutable decision and can be recorded only once.
 - Run queue processes a snapshot of waiting claims sequentially, continues after claim failures, prevents duplicate batches and persists progress. Queue and Finished tabs separate outstanding work from decided claims; list entries show decisions and payouts.
 - Reset tab clears workflow results and activity after an exact `RESET` confirmation, while retaining source records. Both the API and dashboard block resets during any active batch or individual run.
-- Background runs with duplicate-start protection, timestamped activity and explicit retry/restart recovery. No sign-in, real payments, customer messages, claims manual, evaluation runner or AWS resources.
+- Background runs with duplicate-start protection, timestamped activity and explicit retry/restart recovery. No sign-in, real payments, customer messages, evaluation runner or AWS resources.
 
 ## Install and run
 
@@ -40,7 +41,7 @@ Batch progress shows attempts, failures, skipped claims and the current claim, a
 
 Approvals of $1,000 or less are paid by the agent through the separate payment API. Above $1,000, select a handler and choose Sign off and pay. If payment fails after sign-off, the sign-off is retained and Record payment retries only payment. Decline and refer finish without a payment. Referral means a handler needs to exercise judgment or obtain evidence; the pilot does not send customer messages.
 
-Agent instructions shows the exact backend-owned text fetched for each new run, read only. Decisions use policy wording alone. Customer history is available as evidence, but manual-only handling rules are not added to the prompt or API.
+Agent instructions shows the backend-owned texts the agent works to, read only. Decisions follow the policy wording as the claims manual says to read it; the agent looks up the sections it needs and cites them in `policy_sections` and `manual_sections`. The instructions are written from those two documents and never from `data/evals/`.
 
 ## Persistence and recovery
 

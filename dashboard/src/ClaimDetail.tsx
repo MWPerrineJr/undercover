@@ -81,6 +81,9 @@ function DecisionPanel({
           <h3>Payout calculation</h3>
           <p className="calculation">{claim.decision.calculation}</p>
           <p>Policy sections {claim.decision.policy_sections.join(", ")}</p>
+          {claim.decision.manual_sections.length > 0 && (
+            <p>Manual sections {claim.decision.manual_sections.join(", ")}</p>
+          )}
           {claim.sign_off && (
             <p>
               Signed off by{" "}

@@ -10,10 +10,11 @@ UnderCover sells travel insurance on three plans: Economy, Premium and First. Ou
 
 We want an AI agent, the UnderCover Agent, to work the queue the way a handler does. For each claim it should:
 
-- read the claim, the customer's policy and claim history, and the policy wording
+- read the claim, the customer's policy and claim history
+- look up the sections of the policy wording and the claims manual the claim turns on
 - approve, decline or refer the claim
 - work out the payout when it approves
-- explain the decision in two or three sentences, along with the relevant section of the policy
+- explain the decision in two or three sentences, citing the sections it relied on
 
 Our goal is to handle claims straight through, as accurately as our handlers do.
 
@@ -27,7 +28,7 @@ Our goal is to handle claims straight through, as accurately as our handlers do.
 ## Rules
 
 - A payout over $1,000 needs a handler's sign-off. The agent can approve such a claim, but the payment waits until a handler signs off. The system must block the payment until then, even if the agent tries to pay.
-- Decisions follow the policy wording.
+- Decisions follow the policy wording, read as the claims manual says to read it. The wording is the contract and comes first; the manual covers what the wording leaves open.
 - Our handlers' own decisions on these claims are in `data/evals/`. We use them to check the agent's work. The agent must never see them.
 - Amounts are in US dollars.
 
@@ -37,7 +38,6 @@ Everything is in `data/`, described in `data/README.md`: the claims queue, the p
 
 ## Not for now
 
-- The claims manual. For the pilot, the agent works from the policy wording alone.
 - No sign-in. Everyone who uses the screens sees everything.
 - No real payments.
 - No messages to customers.

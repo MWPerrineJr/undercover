@@ -47,6 +47,10 @@ def test_seed_records_and_restart():
             store.record(db, "wording", "wording")["text"]
             == (store.DATA / "policy_wording.md").read_text()
         )
+        assert (
+            store.record(db, "manual", "manual")["text"]
+            == (store.DATA / "claims_manual.md").read_text()
+        )
         db.execute(
             "UPDATE claims SET status='decided', decision='{}' WHERE id='CLM-1001'"
         )
@@ -81,6 +85,7 @@ def test_seed_file_allowlist(tmp_path, monkeypatch):
         "handlers.json",
         "claims.json",
         "policy_wording.md",
+        "claims_manual.md",
     }
 
 

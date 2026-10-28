@@ -5,7 +5,7 @@ import json
 from fastapi import APIRouter
 
 from backend import store, workflow
-from backend.instructions import INSTRUCTIONS
+from backend.instructions import TEXTS
 from backend.models import Activity, Decision, Payment, SignOff
 
 router = APIRouter(prefix="/api")
@@ -44,6 +44,24 @@ def get_claim(claim_id: str) -> dict:
         return store.claim_record(db, claim_id)
 
 
+@router.get("/claims/{claim_id}/policy", operation_id="get_claim_policy")
+def get_claim_policy(claim_id: str) -> dict:
+    """Read the policy and trip behind the claim."""
+    with store.connect() as db:
+        return store.record(
+            db, "policies", store.claim_record(db, claim_id)["policy_id"]
+        )
+
+
+@router.get("/claims/{claim_id}/customer", operation_id="get_claim_customer")
+def get_claim_customer(claim_id: str) -> dict:
+    """Read the customer behind the claim, including earlier claims."""
+    with store.connect() as db:
+        return store.record(
+            db, "customers", store.claim_record(db, claim_id)["customer_id"]
+        )
+
+
 @router.get("/policies/{policy_id}", operation_id="get_policy")
 def get_policy(policy_id: str) -> dict:
     """Read the customer's policy and trip."""
@@ -72,10 +90,18 @@ def get_wording() -> dict:
         return store.record(db, "wording", "wording")
 
 
-@router.get("/instructions", operation_id="get_instructions")
-def get_instructions() -> dict[str, str]:
-    """Read the exact instructions used by the UnderCover Agent."""
-    return {"text": INSTRUCTIONS}
+@router.get("/instructions", operation_id="list_instructions")
+def list_instructions() -> list[dict]:
+    """Read every set of instructions the UnderCover Agent works to."""
+    return [{"name": name, **text} for name, text in TEXTS.items()]
+
+
+@router.get("/instructions/{name}", operation_id="get_instructions")
+def get_instructions(name: str) -> dict:
+    """Read one named set of the agent's instructions."""
+    if name not in TEXTS:
+        raise LookupError("Instructions not found")
+    return {"name": name, **TEXTS[name]}
 
 
 @router.get("/handlers", operation_id="list_handlers")
@@ -128,5 +154,5 @@ def record_activity(claim_id: str, request: Activity) -> dict:
         claim = workflow.current(db, claim_id, request.thread_id)
         if not claim["running"]:
             raise workflow.ConflictError("This run has finished")
-        store.event(db, claim_id, request.thread_id, request.message)
+        store.event(db, claim_id, request.thread_id, request.message, request.kind)
     return {"recorded": True}

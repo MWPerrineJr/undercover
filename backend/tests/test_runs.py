@@ -28,7 +28,11 @@ def test_background_activity_and_duplicates(client, monkeypatch):
         assert (
             client.post(
                 "/api/claims/CLM-1001/activity",
-                json={"thread_id": claim["thread_id"], "message": "Reading evidence"},
+                json={
+                    "thread_id": claim["thread_id"],
+                    "message": "Reading evidence",
+                    "kind": "step",
+                },
             ).status_code
             == 200
         )
@@ -42,7 +46,11 @@ def test_background_activity_and_duplicates(client, monkeypatch):
     assert (
         client.post(
             "/api/claims/CLM-1001/activity",
-            json={"thread_id": claim["thread_id"], "message": "Too late"},
+            json={
+                "thread_id": claim["thread_id"],
+                "message": "Too late",
+                "kind": "step",
+            },
         ).status_code
         == 409
     )
@@ -61,6 +69,7 @@ def test_failure_and_recovery(client, monkeypatch, saved):
                 calculation="100",
                 explanation="Synthetic test. See section 3.",
                 policy_sections=[3],
+                manual_sections=[],
             ),
         )
 
@@ -107,6 +116,7 @@ def test_success_completion(client, monkeypatch):
                 calculation="No payment",
                 explanation="Needs evidence. See section 11.",
                 policy_sections=[11],
+                manual_sections=[],
             ),
         )
 
@@ -130,6 +140,7 @@ def test_restart_preserves_sign_off_payment_and_activity(client):
             calculation="1250",
             explanation="Covered. See section 3.",
             policy_sections=[3],
+            manual_sections=[],
         ),
     )
     runs.recover()

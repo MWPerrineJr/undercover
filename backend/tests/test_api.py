@@ -18,6 +18,7 @@ def decision(client, amount="1000.01", outcome="approve", claim_id="CLM-1001"):
         "calculation": "Synthetic fixture: eligible expenses less offsets.",
         "explanation": "This is a synthetic decision. See the cited policy sections.",
         "policy_sections": [3, 10],
+        "manual_sections": [6],
     }
     return thread, body, client.post(f"/api/claims/{claim_id}/decision", json=body)
 
@@ -34,7 +35,12 @@ def test_read_api(client):
     ]
     assert len(client.get("/api/plans").json()["plans"]) == 3
     assert "## 10." in client.get("/api/policy-wording").json()["text"]
-    assert "policy wording alone" in client.get("/api/instructions").json()["text"]
+    assert client.get("/api/claims/CLM-1001/policy").json()["trip"]
+    assert client.get("/api/claims/CLM-1001/customer").json()["previous_claims"]
+    names = {i["name"]: i for i in client.get("/api/instructions").json()}
+    assert "claims manual" in names["claim"]["text"]
+    assert client.get("/api/instructions/claim").json() == names["claim"]
+    assert client.get("/api/instructions/missing").status_code == 404
     assert len(client.get("/api/handlers").json()) == 3
     assert client.get("/api/claims/CLM-1001/activity").json() == []
     for route in (
@@ -160,6 +166,8 @@ def test_invalid_decisions(client):
     for change in (
         {"policy_sections": []},
         {"policy_sections": [13]},
+        {"manual_sections": [15]},
+        {"manual_sections": "nine"},
         {"explanation": ""},
         {"calculation": ""},
         {"outcome": "unknown"},

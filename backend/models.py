@@ -54,6 +54,7 @@ class Decision(BaseModel):
     policy_sections: Annotated[
         list[Annotated[int, Field(ge=1, le=12)]], Field(min_length=1)
     ]
+    manual_sections: list[Annotated[int, Field(ge=1, le=14)]]
 
     @model_validator(mode="after")
     def non_approval_payout(self):
@@ -76,3 +77,4 @@ class Payment(BaseModel):
 class Activity(BaseModel):
     thread_id: Text
     message: Annotated[str, Field(min_length=1, max_length=300)]
+    kind: Literal["step", "read"]

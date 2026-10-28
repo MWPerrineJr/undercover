@@ -21,6 +21,7 @@ def scripted_review(claim_id, thread_id):
             calculation=str(amount),
             explanation="Synthetic. See section 3.",
             policy_sections=[3],
+            manual_sections=[],
         ),
     )
     if amount <= 1000:

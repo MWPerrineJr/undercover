@@ -34,6 +34,7 @@ export const approved: Partial<Claim> = {
     calculation: "Eligible $1,250.00",
     explanation: "Covered loss. See section 5.",
     policy_sections: [5, 10],
+    manual_sections: [6, 9],
   },
 };
 const idle: QueueRun = {
@@ -127,9 +128,13 @@ export function mockBackend(initial: Partial<Claim> = {}) {
         version: "2026.1",
         text: "Policy section 3: trip delay",
       },
-      "/instructions": {
-        text: "Read the complete policy wording before deciding.",
-      },
+      "/instructions": [
+        {
+          name: "claim",
+          title: "Working a claim",
+          text: "Look up the sections of the wording and the manual you need.",
+        },
+      ],
       "/handlers": [
         {
           handler_id: "HND-01",
@@ -143,7 +148,15 @@ export function mockBackend(initial: Partial<Claim> = {}) {
               id: 1,
               thread_id: claim.thread_id,
               message: "Agent started",
+              kind: "step",
               created_at: "2026-06-24T10:00:00Z",
+            },
+            {
+              id: 2,
+              thread_id: claim.thread_id,
+              message: "Read Claims manual section 9: Repeat claims",
+              kind: "read",
+              created_at: "2026-06-24T10:00:05Z",
             },
           ]
         : [],

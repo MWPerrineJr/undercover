@@ -44,8 +44,11 @@ it("shows the read-only agent instructions and returns to the claim", async () =
   fireEvent.click(screen.getByRole("button", { name: "Agent instructions" }));
   expect(
     await screen.findByText(
-      "Read the complete policy wording before deciding.",
+      "Look up the sections of the wording and the manual you need.",
     ),
+  ).toBeDefined();
+  expect(
+    screen.getByRole("heading", { name: "Working a claim" }),
   ).toBeDefined();
   fireEvent.click(screen.getByRole("button", { name: "Claims workspace" }));
   expect(
@@ -70,6 +73,7 @@ it("runs the agent, polls active work and stops polling after completion", async
       calculation: "0",
       explanation: "Needs evidence.",
       policy_sections: [11],
+      manual_sections: [5],
     },
     outcome: "refer",
     payout: "0",
