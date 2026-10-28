@@ -2,13 +2,20 @@
 
 from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
 from langchain_core.messages import AIMessage
+from pydantic import Field
 
 
 class StubModel(GenericFakeChatModel):
-    """Emit scripted tool calls in place of a remote model."""
+    """Emit scripted tool calls in place of a remote model, keeping what it saw."""
+
+    seen: list = Field(default_factory=list)
 
     def bind_tools(self, tools, **kwargs):
         return self
+
+    def _generate(self, messages, *args, **kwargs):
+        self.seen.append(messages)
+        return super()._generate(messages, *args, **kwargs)
 
 
 def scripted(outcome="approve", amount="420.00", attempt_payment=True):

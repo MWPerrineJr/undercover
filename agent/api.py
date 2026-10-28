@@ -13,3 +13,11 @@ def backend() -> httpx.Client:
     return httpx.Client(
         base_url=os.getenv("BACKEND_URL", "http://localhost:8000"), timeout=20
     )
+
+
+def instructions(name: str) -> str:
+    """Read one of the backend's instruction texts."""
+    with backend() as client:
+        response = client.get(f"/api/instructions/{name}")
+    response.raise_for_status()
+    return response.json()["text"]

@@ -54,11 +54,11 @@ Report lines: `CLM-1002 approve $1,250.00 waiting for sign-off`, `CLM-1003 decli
 
 Success criteria:
 
-- [ ] Unit tests with the scripted stub assert each of the four report lines, including the payment and sign-off wording.
-- [ ] A test running two claims in one process asserts different thread ids and that the second agent's message history contains nothing from the first claim.
-- [ ] Activity for each claim stays on that claim; `GET /api/claims/{id}/activity` for the second claim contains no events from the first.
-- [ ] `POST /api/claims/{id}/run` and the existing single-claim e2e test behave exactly as before.
-- [ ] `npm run check:python` and `npm run e2e` are green.
+- [x] Unit tests with the scripted stub assert each of the four report lines, including the payment and sign-off wording.
+- [x] A test running two claims in one process asserts different thread ids and that the second agent's message history contains nothing from the first claim.
+- [x] Activity for each claim stays on that claim; `GET /api/claims/{id}/activity` for the second claim contains no events from the first.
+- [x] `POST /api/claims/{id}/run` and the existing single-claim e2e test behave exactly as before.
+- [x] `npm run check:python` and `npm run e2e` are green.
 
 ## Phase 3: One run, a to-do list and a cap
 

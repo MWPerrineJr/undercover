@@ -6,6 +6,8 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 
 from agent import api, main
+from agent import claim as claim_agent
+from agent import model as model_module
 from agent.tests.stubs import StubModel, scripted
 from agent.tools import tools_for
 from backend import store, workflow
@@ -21,20 +23,22 @@ def client(tmp_path, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    ("outcome", "amount", "status"),
+    ("outcome", "amount", "status", "report"),
     [
-        ("approve", "420.00", "decided"),
-        ("approve", "1250.00", "waiting_for_sign_off"),
-        ("decline", "0", "decided"),
-        ("refer", "0", "decided"),
+        ("approve", "420.00", "decided", "CLM-1001 approve $420.00 paid"),
+        (
+            "approve",
+            "1250.00",
+            "waiting_for_sign_off",
+            "CLM-1001 approve $1,250.00 waiting for sign-off",
+        ),
+        ("decline", "0", "decided", "CLM-1001 decline $0.00"),
+        ("refer", "0", "decided", "CLM-1001 refer $0.00"),
     ],
 )
-def test_run(client, outcome, amount, status):
+def test_run(client, outcome, amount, status, report):
     thread = workflow.start("CLM-1001")["thread_id"]
-    assert (
-        main.run("CLM-1001", thread, scripted(outcome, amount))
-        == "Claim processing complete."
-    )
+    assert main.run("CLM-1001", thread, scripted(outcome, amount)) == report
     claim = client.get("/api/claims/CLM-1001").json()
     assert claim["status"] == status
     assert claim["decision"]["outcome"] == outcome
@@ -47,6 +51,37 @@ def test_run(client, outcome, amount, status):
     ]
     assert all(a["thread_id"] == thread for a in activity)
     assert not any("evals" in a["message"] for a in activity)
+
+
+def test_each_claim_starts_clean_and_reports_a_line(client):
+    first, second = (
+        workflow.start(claim_id)["thread_id"] for claim_id in ("CLM-1001", "CLM-1002")
+    )
+    models = [scripted(), scripted("decline", "0", False)]
+    assert claim_agent.work_claim("CLM-1001", first, models[0]) == (
+        "CLM-1001 approve $420.00 paid"
+    )
+    assert claim_agent.work_claim("CLM-1002", second, models[1]) == (
+        "CLM-1002 decline $0.00"
+    )
+    assert first != second
+    later = str(models[1].seen)
+    assert "CLM-1001" not in later
+    assert first not in later
+    assert all(
+        "CLM-1002" not in event["message"]
+        for event in client.get("/api/claims/CLM-1001/activity").json()
+    )
+    assert all(
+        event["thread_id"] == second
+        for event in client.get("/api/claims/CLM-1002/activity").json()
+    )
+
+
+def test_a_run_that_saves_nothing_reports_failure(client):
+    thread = workflow.start("CLM-1001")["thread_id"]
+    model = StubModel(messages=iter([AIMessage(content="I am stuck.")]))
+    assert main.run("CLM-1001", thread, model) == "CLM-1001 failed: no decision saved"
 
 
 def test_invalid_tool_output(client):
@@ -83,11 +118,11 @@ def test_invalid_tool_output(client):
 def test_model_name_and_http_client(monkeypatch):
     monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
     monkeypatch.delenv("MODEL_NAME", raising=False)
-    assert main.model().model_name == "openai/gpt-6-luna"
-    assert main.model().reasoning_effort == "low"
+    assert model_module.model().model_name == "openai/gpt-6-luna"
+    assert model_module.model().reasoning_effort == "low"
     monkeypatch.setenv("MODEL_NAME", "openrouter/free")
-    assert main.model().model_name == "openrouter/free"
-    assert main.model().reasoning_effort is None
+    assert model_module.model().model_name == "openrouter/free"
+    assert model_module.model().reasoning_effort is None
     monkeypatch.setenv("BACKEND_URL", "http://example.invalid")
     with api.backend() as client:
         assert str(client.base_url) == "http://example.invalid"
