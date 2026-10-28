@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { api, loadDetails, useResource } from "./api";
 import { RecordDetails } from "./RecordDetails";
-import { label, money } from "./format";
+import { claimState, label, money } from "./format";
 import type { Details } from "./types";
 
 interface Props {
@@ -69,7 +69,9 @@ function DecisionPanel({
     <section className="panel decision-panel" aria-label="Decision">
       <div className="section-heading">
         <h2>Decision</h2>
-        <span className={`badge ${claim.status}`}>{label(claim.status)}</span>
+        <span className={`badge ${claimState(claim)}`}>
+          {label(claimState(claim))}
+        </span>
       </div>
       {claim.decision ? (
         <>

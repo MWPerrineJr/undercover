@@ -3,6 +3,8 @@ import type { Claim, QueueRun, Summary } from "../src/types";
 
 export const original: Claim = {
   claim_id: "CLM-1001",
+  attempts: 0,
+  left_for_handler: false,
   customer_id: "CUS-1",
   policy_id: "POL-1",
   claim_type: "trip_delay",

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { api } from "./api";
-import { label, money } from "./format";
+import { claimState, label, money } from "./format";
 import { TodoList } from "./TodoList";
 import type { QueueRun, Summary } from "./types";
 
@@ -145,8 +145,8 @@ export function Queue({
           >
             <span className="queue-item-top">
               <span className="identifier">{claim.claim_id}</span>
-              <span className={`badge ${claim.status}`}>
-                {label(claim.status)}
+              <span className={`badge ${claimState(claim)}`}>
+                {label(claimState(claim))}
               </span>
             </span>
             <strong>{claim.customer_name}</strong>

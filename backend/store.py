@@ -21,16 +21,22 @@ CREATE TABLE IF NOT EXISTS claims (
         CHECK(status IN ('waiting','in_progress','waiting_for_sign_off','decided')),
     thread_id TEXT, running INTEGER NOT NULL DEFAULT 0,
     decision TEXT, sign_off TEXT, payment TEXT,
+    attempts INTEGER NOT NULL DEFAULT 0,
     CHECK(payment IS NULL OR decision IS NOT NULL),
     CHECK(sign_off IS NULL OR decision IS NOT NULL)
 );
 CREATE TABLE IF NOT EXISTS runs (
-    id TEXT PRIMARY KEY, cap INTEGER NOT NULL, worked INTEGER NOT NULL DEFAULT 0,
+    id TEXT PRIMARY KEY, cap INTEGER NOT NULL,
     status TEXT NOT NULL DEFAULT 'running'
         CHECK(status IN ('running','finished','stopped')),
     summary TEXT,
     started_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
     finished_at TEXT
+);
+CREATE TABLE IF NOT EXISTS run_claims (
+    run_id TEXT NOT NULL REFERENCES runs(id),
+    claim_id TEXT NOT NULL REFERENCES claims(id),
+    PRIMARY KEY (run_id, claim_id)
 );
 CREATE TABLE IF NOT EXISTS todos (
     run_id TEXT NOT NULL REFERENCES runs(id),
@@ -47,6 +53,7 @@ CREATE TABLE IF NOT EXISTS activity (
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
 """
+ATTEMPT_LIMIT = 2
 DOCUMENTS = (
     ("wording", "policy_wording.md", "2026.1"),
     ("manual", "claims_manual.md", "2026.2"),
@@ -75,6 +82,10 @@ def initialize():
         if "running" not in columns:
             db.execute(
                 "ALTER TABLE claims ADD COLUMN running INTEGER NOT NULL DEFAULT 0"
+            )
+        if "attempts" not in columns:
+            db.execute(
+                "ALTER TABLE claims ADD COLUMN attempts INTEGER NOT NULL DEFAULT 0"
             )
         events = {row["name"] for row in db.execute("PRAGMA table_info(activity)")}
         if "kind" not in events:
@@ -153,10 +164,14 @@ def claim_record(db, claim_id: str) -> dict:
             "status": row["status"],
             "thread_id": row["thread_id"],
             "running": bool(row["running"]),
+            "attempts": row["attempts"],
         }
     )
     for field in ("decision", "sign_off", "payment"):
         result[field] = json.loads(row[field]) if row[field] else None
+    result["left_for_handler"] = (
+        row["attempts"] >= ATTEMPT_LIMIT and result["decision"] is None
+    )
     return result
 
 

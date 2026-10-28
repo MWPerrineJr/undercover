@@ -13,13 +13,14 @@ from backend import queue, runs, store
 from backend.main import app
 
 ATTEMPTS: dict[str, int] = {}
+UNRELIABLE = {"CLM-1005", "CLM-1025"}
 
 
 def scripted_run(claim_id: str, thread_id: str):
     """Use synthetic outcomes unrelated to the evaluation answer key."""
     time.sleep(0.4)
     ATTEMPTS[claim_id] = ATTEMPTS.get(claim_id, 0) + 1
-    if claim_id in {"CLM-1005", "CLM-1025"} and ATTEMPTS[claim_id] == 1:
+    if claim_id in UNRELIABLE and ATTEMPTS[claim_id] == 1:
         raise ConnectionError("Synthetic unavailable model")
     outcome, amount = {
         "CLM-1002": ("approve", "1250.00"),
@@ -34,7 +35,8 @@ def scripted_queue(run_id: str):
     with store.connect() as db:
         cap = db.execute("SELECT cap FROM runs WHERE id=?", (run_id,)).fetchone()["cap"]
         claim_ids = [claim["claim_id"] for claim in queue.waiting_claims(db)][:cap]
-    return run_queue(run_id, queue_script(claim_ids), scripted_run)
+    retry = [claim_id for claim_id in claim_ids if claim_id in UNRELIABLE]
+    return run_queue(run_id, queue_script(claim_ids, retry=retry), scripted_run)
 
 
 def main():

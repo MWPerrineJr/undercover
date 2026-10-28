@@ -172,3 +172,16 @@ it("loads a run that is already under way", async () => {
     await screen.findByRole("button", { name: "Reset all claims" }),
   ).toHaveProperty("disabled", true);
 });
+
+it("shows a claim that failed twice as left for a handler", async () => {
+  const { claim } = mockBackend();
+  Object.assign(claim, { attempts: 2, left_for_handler: true });
+  render(<App />);
+  const queue = await screen.findByRole("navigation", { name: "Claims" });
+  expect(
+    within(queue).getByRole("button", { name: /CLM-1001/ }).textContent,
+  ).toContain("left for a handler");
+  expect(
+    within(queue).getByRole("button", { name: /CLM-1002/ }).textContent,
+  ).toContain("waiting");
+});

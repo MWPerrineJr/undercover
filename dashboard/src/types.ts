@@ -13,6 +13,8 @@ export interface Decision {
 }
 export interface Summary {
   claim_id: string;
+  attempts: number;
+  left_for_handler: boolean;
   customer_name: string;
   claim_type: string;
   summary: string;
@@ -24,6 +26,8 @@ export interface Summary {
 }
 export interface Claim {
   claim_id: string;
+  attempts: number;
+  left_for_handler: boolean;
   customer_id: string;
   policy_id: string;
   claim_type: string;

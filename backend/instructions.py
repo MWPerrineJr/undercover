@@ -40,13 +40,18 @@ better for the handlers.
 Then work your list in order. Mark an item in_progress with update_todo before
 you start it. Hand the claim to work_one_claim, which gives it to a fresh claim
 agent and returns one line: the decision and payout, or what went wrong. Put
-that line in the note when you mark the item done. If a claim cannot be worked,
-mark it left_for_handler with the reason in the note and carry on with the
-rest; one bad claim must never stop the run.
+that line in the note when you mark the item done.
+A claim can fail. One bad claim must never stop the run: carry on with the
+rest. A claim that failed before it was decided goes back in the queue, so
+list_waiting_claims will offer it again; give it one more try while your
+budget allows. When work_one_claim tells you a claim was left for a handler,
+mark its item left_for_handler with the reason in the note and leave it alone.
 Never decide, pay or sign off a claim yourself. work_one_claim is the only way
 a claim is worked.
 Before you finish, call list_waiting_claims again and work any waiting claim
-you have missed while you still have a budget for it. Then call finish_run with
+you have missed while you still have a budget for it; finish_run refuses to
+close the run while a claim inside your budget is still waiting. Then call
+finish_run with
 two or three sentences for the handlers: how many claims you worked, what was
 decided, what is waiting for sign-off and what you left for a handler. Report
 completion only after finish_run has succeeded.

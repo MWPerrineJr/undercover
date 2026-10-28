@@ -50,7 +50,17 @@ def scripted(outcome="approve", amount="420.00", attempt_payment=True):
     return StubModel(messages=iter(replies))
 
 
-def queue_script(claim_ids, cap_note="worked"):
+def script(calls, ending="Done."):
+    """Return a stub model that makes the given tool calls, then stops."""
+    replies = [
+        AIMessage(content="", tool_calls=[{"name": name, "args": args, "id": str(i)}])
+        for i, (name, args) in enumerate(calls)
+    ]
+    replies.append(AIMessage(content=ending))
+    return StubModel(messages=iter(replies))
+
+
+def queue_script(claim_ids, cap_note="worked", retry=()):
     """Script a queue agent that plans, works each claim and closes the run."""
     calls = [("list_waiting_claims", {})]
     calls.append(
@@ -80,10 +90,13 @@ def queue_script(claim_ids, cap_note="worked"):
             )
         )
     calls.append(("list_waiting_claims", {}))
+    for claim_id in retry:
+        calls.append(("work_one_claim", {"claim_id": claim_id}))
+        calls.append(
+            (
+                "update_todo",
+                {"claim_id": claim_id, "state": "done", "note": f"{claim_id} retried"},
+            )
+        )
     calls.append(("finish_run", {"summary": f"Worked {len(claim_ids)} claims."}))
-    replies = [
-        AIMessage(content="", tool_calls=[{"name": name, "args": args, "id": str(i)}])
-        for i, (name, args) in enumerate(calls)
-    ]
-    replies.append(AIMessage(content="Queue run complete."))
-    return StubModel(messages=iter(replies))
+    return script(calls, "Queue run complete.")

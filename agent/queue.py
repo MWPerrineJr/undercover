@@ -60,12 +60,19 @@ def working_tool(request, worker):
         if "error" in started:
             return f"{claim_id} not worked: {started['error']}"
         thread_id = started["thread_id"]
-        report = worker(claim_id, thread_id)
-        request(
-            "POST",
-            f"/claims/{claim_id}/finish",
-            {"thread_id": thread_id, "report": report},
+        try:
+            report = worker(claim_id, thread_id)
+        except Exception as failure:
+            report = f"{claim_id} failed: {type(failure).__name__}"
+        finished = json.loads(
+            request(
+                "POST",
+                f"/claims/{claim_id}/finish",
+                {"thread_id": thread_id, "report": report},
+            )
         )
+        if finished.get("left_for_handler"):
+            return f"{report}; left for a handler after two attempts"
         return report
 
     return [work_one_claim]

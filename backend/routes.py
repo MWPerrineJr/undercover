@@ -30,6 +30,8 @@ def list_claims() -> list[dict]:
                 "amount_claimed": c["amount_claimed"],
                 "status": c["status"],
                 "running": c["running"],
+                "attempts": c["attempts"],
+                "left_for_handler": c["left_for_handler"],
                 "decision": c["decision"],
                 "payment": c["payment"],
             }

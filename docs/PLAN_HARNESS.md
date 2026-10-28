@@ -84,18 +84,18 @@ Success criteria:
 
 Make a long run survive its own weather.
 
-Add `attempts` to `claims`. A run that fails before a decision returns the claim to `waiting` and increments `attempts`; at two attempts the claim moves to `left_for_handler` with activity saying so, and its to-do item takes the same state. Give the model client an explicit timeout and retry count, and keep the httpx timeout. `work_claim` catches everything and returns a failure line. `finish_run` is refused with `409` while budget remains and waiting, untried claims exist, and the accepted summary records how many claims were checked and how many were left for a handler.
+Add `attempts` to `claims`. A run that fails before a decision returns the claim to `waiting` and increments `attempts`; at two attempts the claim is left for a handler, with activity saying so and its to-do item in `left_for_handler`. "Left for a handler" is derived from `attempts` rather than stored as a fifth claim status, so no existing database needs its `CHECK` constraint rebuilt; the backend refuses to start such a claim again and the queue and claim pages badge it. The cap counts the distinct claims a run takes, so a retry of the same claim does not spend another slot. Give the model client an explicit timeout and retry count, and keep the httpx timeout. `work_claim` catches everything and returns a failure line. `finish_run` is refused with `409` while budget remains and waiting, untried claims exist, and the accepted summary records how many claims were checked and how many were left for a handler.
 
 Success criteria:
 
-- [ ] A stub whose second claim raises still works the remaining claims; the run finishes and its summary names the failure.
-- [ ] A claim that fails before a decision is back at `waiting` with `attempts` 1, and a later attempt in the same run decides it.
-- [ ] A claim that fails twice ends at `left_for_handler` with its to-do item `left_for_handler`, and is not tried a third time.
-- [ ] A claim already decided is skipped: `work_claim` returns "already decided" and no second decision or payment row is written.
-- [ ] A direct second `POST .../decision` and a second `POST .../payment` still return `409`, and payment above $1,000 without sign-off still returns `409`.
-- [ ] `finish_run` with waiting claims inside the cap returns `409`; after those claims are worked it succeeds and the summary counts them.
-- [ ] A model timeout is surfaced as a failure line, not a traceback, and the claim returns to `waiting`.
-- [ ] `npm run check:python` is green.
+- [x] A stub whose second claim raises still works the remaining claims; the run finishes and its summary names the failure.
+- [x] A claim that fails before a decision is back at `waiting` with `attempts` 1, and a later attempt in the same run decides it.
+- [x] A claim that fails twice ends at `left_for_handler` with its to-do item `left_for_handler`, and is not tried a third time.
+- [x] A claim already decided is skipped: `work_claim` returns "already decided" and no second decision or payment row is written.
+- [x] A direct second `POST .../decision` and a second `POST .../payment` still return `409`, and payment above $1,000 without sign-off still returns `409`.
+- [x] `finish_run` with waiting claims inside the cap returns `409`; after those claims are worked it succeeds and the summary counts them.
+- [x] A model timeout is surfaced as a failure line, not a traceback, and the claim returns to `waiting`.
+- [x] `npm run check:python` is green.
 
 ## Phase 5: What the team sees
 

@@ -28,7 +28,9 @@ def current(db, claim_id: str, thread_id: str) -> dict:
 def reserve(db, claim_id: str) -> str:
     """Take a waiting claim for one agent run inside an open transaction."""
     claim = store.claim_record(db, claim_id)
-    if claim["status"] != "waiting" or claim["decision"] or claim["running"]:
+    if claim["decision"]:
+        raise ConflictError("This claim has already been decided")
+    if claim["status"] != "waiting" or claim["running"]:
         raise ConflictError("Only waiting claims can be started")
     thread_id = str(uuid4())
     db.execute(

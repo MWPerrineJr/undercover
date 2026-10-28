@@ -43,13 +43,20 @@ def latest(db) -> dict:
     return {
         "run_id": row["id"],
         "cap": row["cap"],
-        "worked": row["worked"],
+        "worked": taken(db, row["id"]),
         "status": row["status"],
         "summary": row["summary"],
         "started_at": row["started_at"],
         "finished_at": row["finished_at"],
         "todos": [dict(todo) for todo in todos],
     }
+
+
+def taken(db, run_id: str) -> int:
+    """Count the claims this run has taken, however often each was tried."""
+    return db.execute(
+        "SELECT count(*) FROM run_claims WHERE run_id=?", (run_id,)
+    ).fetchone()[0]
 
 
 def active(db, run_id: str) -> dict:
@@ -64,10 +71,11 @@ def active(db, run_id: str) -> dict:
 
 
 def waiting_claims(db) -> list[dict]:
-    """List the claims still waiting for a decision."""
+    """List the claims still worth an attempt in this run."""
     rows = db.execute(
         "SELECT id FROM claims WHERE status='waiting' AND decision IS NULL "
-        "AND running=0 ORDER BY id"
+        "AND running=0 AND attempts<? ORDER BY id",
+        (store.ATTEMPT_LIMIT,),
     ).fetchall()
     claims = [store.claim_record(db, row["id"]) for row in rows]
     return [
@@ -79,6 +87,7 @@ def waiting_claims(db) -> list[dict]:
                 "summary",
                 "submitted_on",
                 "amount_claimed",
+                "attempts",
             )
         }
         for claim in claims
@@ -141,7 +150,7 @@ def list_waiting(run_id: str) -> dict:
     with store.connect() as db:
         run = active(db, run_id)
         return {
-            "remaining": run["cap"] - run["worked"],
+            "remaining": run["cap"] - taken(db, run_id),
             "claims": waiting_claims(db),
         }
 
@@ -183,28 +192,56 @@ def start_queue_claim(run_id: str, claim_id: str) -> dict:
     """Take one claim for this run, inside its cap."""
     with store.connect() as db:
         run = active(db, run_id)
-        if run["worked"] >= run["cap"]:
+        already = db.execute(
+            "SELECT 1 FROM run_claims WHERE run_id=? AND claim_id=?",
+            (run_id, claim_id),
+        ).fetchone()
+        if not already and taken(db, run_id) >= run["cap"]:
             raise workflow.ConflictError("This run has reached its cap")
+        if store.claim_record(db, claim_id)["left_for_handler"]:
+            raise workflow.ConflictError("This claim has been left for a handler")
         thread_id = workflow.reserve(db, claim_id)
-        db.execute("UPDATE runs SET worked=worked+1 WHERE id=?", (run_id,))
+        db.execute("INSERT OR IGNORE INTO run_claims VALUES (?, ?)", (run_id, claim_id))
         return {"thread_id": thread_id}
 
 
 @router.post("/{run_id}/claims/{claim_id}/finish", operation_id="finish_queue_claim")
 def finish_queue_claim(run_id: str, claim_id: str, request: ClaimReport) -> dict:
-    """Release one claim and record what the claim agent reported."""
+    """Release one claim, counting an attempt that saved no decision."""
     with store.connect() as db:
         active(db, run_id)
     runs.finish(claim_id, request.thread_id, f"Run finished: {request.report}")
     with store.connect() as db:
+        claim = store.claim_record(db, claim_id)
+        if claim["decision"]:
+            return claim
+        attempts = claim["attempts"] + 1
+        db.execute("UPDATE claims SET attempts=? WHERE id=?", (attempts, claim_id))
+        store.event(
+            db,
+            claim_id,
+            request.thread_id,
+            f"Attempt {attempts} saved no decision; "
+            + (
+                "left for a handler"
+                if attempts >= store.ATTEMPT_LIMIT
+                else "back in the queue to try again"
+            ),
+        )
         return store.claim_record(db, claim_id)
 
 
 @router.post("/{run_id}/finish", operation_id="finish_run")
 def finish_run(run_id: str, request: RunSummary) -> dict:
-    """Close the run with a summary for the handlers."""
+    """Close the run, refusing while claims inside the cap are still waiting."""
     with store.connect() as db:
-        active(db, run_id)
+        run = active(db, run_id)
+        missed = waiting_claims(db)[: run["cap"] - taken(db, run_id)]
+        if missed:
+            raise workflow.ConflictError(
+                "Still waiting inside this run's cap: "
+                + ", ".join(claim["claim_id"] for claim in missed)
+            )
         db.execute(
             "UPDATE runs SET status='finished', summary=?, "
             "finished_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id=?",
@@ -225,6 +262,7 @@ def reset_queue(request: ResetQueue) -> dict:
             )
         db.execute("DELETE FROM activity")
         db.execute("DELETE FROM todos")
+        db.execute("DELETE FROM run_claims")
         db.execute("DELETE FROM runs")
         db.execute(
             "UPDATE claims SET status='waiting', running=0, thread_id=NULL, "
